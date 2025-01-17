@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"github.com/hertz-contrib/sessions"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -16,4 +17,13 @@ func SendErrResponse(ctx context.Context, c *app.RequestContext, code int, err e
 func SendSuccessResponse(ctx context.Context, c *app.RequestContext, code int, data interface{}) {
 	// todo edit custom code
 	c.JSON(code, data)
+}
+
+// 获取一些上下文信息
+func WarpResponse(ctx context.Context, c *app.RequestContext, content map[string]any) map[string]any {
+	session := sessions.Default(c)
+	userId := session.Get("user_id")
+	content["user_id"] = userId
+	//content["cart_num"] = cartNum
+	return content
 }

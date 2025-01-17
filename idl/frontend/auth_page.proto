@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package frontend.auth;
+
+import "api.proto";
+
+option go_package = "/frontend/auth";
+
+message RegisterReq {
+  string email = 1 [(api.form) = "email"];
+  string password = 2 [(api.form) = "password"];
+  string confirm_password = 3 [(api.form) = "confirm_password"];
+}
+
+message LoginReq {
+  string email = 1 [(api.form) = "email"];
+  string password = 2 [(api.form) = "password"];
+}
+
+message Empty{}
+
+service AuthService {
+  rpc register(RegisterReq) returns (Empty) {
+    option (api.post) = "/auth/register";
+  }
+  rpc login(LoginReq) returns (Empty) {
+    option (api.post) = "/auth/login";
+  }
+  rpc logout(Empty) returns (Empty) {
+    option (api.post) = "/auth/logout";
+  }
+}

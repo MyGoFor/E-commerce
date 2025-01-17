@@ -4,6 +4,10 @@ package main
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/frontend/middleware"
+	"github.com/hertz-contrib/sessions"
+	"github.com/hertz-contrib/sessions/redis"
+	"os"
 	"time"
 
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/router"
@@ -19,11 +23,13 @@ import (
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
 	"github.com/hertz-contrib/pprof"
+	"github.com/joho/godotenv"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
+	_ = godotenv.Load()
 	// init dal
 	// dal.Init()
 	address := conf.GetConf().Hertz.Address
@@ -44,13 +50,19 @@ func main() {
 		c.HTML(consts.StatusOK, "sign-in", utils.H{"Title": "Sign In"})
 	})
 	h.GET("sign-up", func(ctx context.Context, c *app.RequestContext) {
-		c.HTML(consts.StatusOK, "sign-up", utils.H{"title": "Sign up"})
+		c.HTML(consts.StatusOK, "sign-up", utils.H{"Title": "Sign Up"})
+	})
+	h.GET("/about", middleware.Auth(), func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(consts.StatusOK, "about", utils.H{"Title": "About"})
 	})
 
 	h.Spin()
 }
 
 func registerMiddleware(h *server.Hertz) {
+	store, _ := redis.NewStore(10, "tcp", conf.GetConf().Redis.Address, "", []byte(os.Getenv("SESSION_SECRET")))
+	h.Use(sessions.New("E-commerce", store))
+
 	// log
 	logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
