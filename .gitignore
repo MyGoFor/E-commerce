@@ -5,5 +5,6 @@ app/**/nohup.out
 app/**/log/
 app/**/tmp/
 app/**/kitex_gen/
+app/*/.env
 
 go.work.sum
