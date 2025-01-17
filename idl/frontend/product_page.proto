@@ -20,7 +20,7 @@ service ProductService {
   rpc GetProduct(ProductReq) returns (Empty) {
     option (api.get) = "/product";
   }
-  rpc SearchProducs(SearchProductsReq) returns (Empty) {
+  rpc SearchProducts(SearchProductsReq) returns (Empty) {
     option (api.get) = "/search";
   }
 }
