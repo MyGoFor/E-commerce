@@ -1,0 +1,17 @@
+{{define "home"}}
+{{template "header" .}}
+<div class="row">
+
+    {{range .Items}}
+    <div class="card border-0 col-lg-4 col-md-6 col-sm-12 p-1">
+        <img src="{{.Picture}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p class="card-text">{{.Name}}</p>
+            <h5 class="card-title">{{.Price}}</h5>
+        </div>
+    </div>
+    {{end}}
+
+</div>
+{{template "footer" .}}
+{{end}}
