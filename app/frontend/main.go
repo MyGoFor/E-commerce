@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
 	"github.com/MyGoFor/E-commerce/app/frontend/middleware"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
@@ -32,6 +33,8 @@ func main() {
 	_ = godotenv.Load()
 	// init dal
 	// dal.Init()
+	rpc.Init()
+
 	address := conf.GetConf().Hertz.Address
 	h := server.New(server.WithHostPorts(address))
 

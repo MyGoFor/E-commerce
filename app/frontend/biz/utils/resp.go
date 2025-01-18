@@ -24,6 +24,5 @@ func WarpResponse(ctx context.Context, c *app.RequestContext, content map[string
 	session := sessions.Default(c)
 	userId := session.Get("user_id")
 	content["user_id"] = userId
-	//content["cart_num"] = cartNum
 	return content
 }

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
 	"gopkg.in/yaml.v2"
@@ -18,11 +18,11 @@ var (
 )
 
 type Config struct {
-	Env string
-
-	Hertz Hertz `yaml:"hertz"`
-	MySQL MySQL `yaml:"mysql"`
-	Redis Redis `yaml:"redis"`
+	Env      string
+	Kitex    Kitex    `yaml:"kitex"`
+	MySQL    MySQL    `yaml:"mysql"`
+	Redis    Redis    `yaml:"redis"`
+	Registry Registry `yaml:"registry"`
 }
 
 type MySQL struct {
@@ -31,23 +31,25 @@ type MySQL struct {
 
 type Redis struct {
 	Address  string `yaml:"address"`
-	Password string `yaml:"password"`
 	Username string `yaml:"username"`
+	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
 }
 
-type Hertz struct {
-	Service         string `yaml:"service"`
-	Address         string `yaml:"address"`
-	EnablePprof     bool   `yaml:"enable_pprof"`
-	EnableGzip      bool   `yaml:"enable_gzip"`
-	EnableAccessLog bool   `yaml:"enable_access_log"`
-	LogLevel        string `yaml:"log_level"`
-	LogFileName     string `yaml:"log_file_name"`
-	LogMaxSize      int    `yaml:"log_max_size"`
-	LogMaxBackups   int    `yaml:"log_max_backups"`
-	LogMaxAge       int    `yaml:"log_max_age"`
-	RegistryAddr    string `yaml:"registry_addr"`
+type Kitex struct {
+	Service       string `yaml:"service"`
+	Address       string `yaml:"address"`
+	LogLevel      string `yaml:"log_level"`
+	LogFileName   string `yaml:"log_file_name"`
+	LogMaxSize    int    `yaml:"log_max_size"`
+	LogMaxBackups int    `yaml:"log_max_backups"`
+	LogMaxAge     int    `yaml:"log_max_age"`
+}
+
+type Registry struct {
+	RegistryAddress []string `yaml:"registry_address"`
+	Username        string   `yaml:"username"`
+	Password        string   `yaml:"password"`
 }
 
 // GetConf gets configuration instance
@@ -63,20 +65,17 @@ func initConf() {
 	if err != nil {
 		panic(err)
 	}
-
 	conf = new(Config)
 	err = yaml.Unmarshal(content, conf)
 	if err != nil {
-		hlog.Error("parse yaml error - %v", err)
+		klog.Error("parse yaml error - %v", err)
 		panic(err)
 	}
 	if err := validator.Validate(conf); err != nil {
-		hlog.Error("validate config error - %v", err)
+		klog.Error("validate config error - %v", err)
 		panic(err)
 	}
-
 	conf.Env = GetEnv()
-
 	pretty.Printf("%+v\n", conf)
 }
 
@@ -88,24 +87,24 @@ func GetEnv() string {
 	return e
 }
 
-func LogLevel() hlog.Level {
-	level := GetConf().Hertz.LogLevel
+func LogLevel() klog.Level {
+	level := GetConf().Kitex.LogLevel
 	switch level {
 	case "trace":
-		return hlog.LevelTrace
+		return klog.LevelTrace
 	case "debug":
-		return hlog.LevelDebug
+		return klog.LevelDebug
 	case "info":
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	case "notice":
-		return hlog.LevelNotice
+		return klog.LevelNotice
 	case "warn":
-		return hlog.LevelWarn
+		return klog.LevelWarn
 	case "error":
-		return hlog.LevelError
+		return klog.LevelError
 	case "fatal":
-		return hlog.LevelFatal
+		return klog.LevelFatal
 	default:
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	}
 }
