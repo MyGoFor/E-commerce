@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	user "github.com/MyGoFor/E-commerce/app/user/kitex_gen/user"
+	user "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/user"
 	"testing"
 )
 

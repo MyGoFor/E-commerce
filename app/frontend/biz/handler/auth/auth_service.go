@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
 	auth "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/auth"

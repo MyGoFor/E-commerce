@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
-	user "github.com/MyGoFor/E-commerce/app/user/kitex_gen/user"
+	"errors"
+	"github.com/MyGoFor/E-commerce/app/user/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/user/biz/model"
+	user "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/user"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginService struct {
@@ -13,8 +17,21 @@ func NewLoginService(ctx context.Context) *LoginService {
 }
 
 // Run create note info
-func (s *LoginService) Run(req *user.LoginReq) (resp *user.Resp, err error) {
+func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error) {
 	// Finish your business logic.
+	if req.Email == "" || req.Password == "" {
+		return nil, errors.New("email or password is empty")
+	}
 
-	return
+	row, err := model.GetByEmail(mysql.DB, s.ctx, req.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(row.Password), []byte(req.Password))
+	if err != nil {
+		return nil, err
+	}
+
+	return &user.LoginResp{UserId: int32(row.ID)}, nil
 }

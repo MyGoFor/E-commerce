@@ -4,24 +4,10 @@ import (
 	"time"
 )
 
-// 一些数据库结构体参考
-type Token struct {
-	ID           uint      `gorm:"primaryKey"`
-	UserID       uint      `gorm:"index"`
-	Token        string    `gorm:"unique"`
-	RefreshToken string    `gorm:"unique"`
-	ExpiresAt    time.Time `gorm:"not null"`
-	CreatedAt    time.Time `gorm:"autoCreateTime"`
-	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
-}
-
 type User struct {
-	ID        uint      `gorm:"primaryKey"`
-	Email     string    `gorm:"unique;not null"`
-	Password  string    `gorm:"not null"`
-	CreatedAt time.Time `gorm:"autoCreateTime"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"`
-	Status    int       `gorm:"default:1"` // 1: active, 0: inactive
+	//gorm.Model
+	Email    string `gorm:"unique;not null"`
+	Password string `gorm:"not null"`
 }
 
 type Product struct {

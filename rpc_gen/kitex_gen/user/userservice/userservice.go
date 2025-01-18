@@ -187,14 +187,14 @@ func (p *RegisterArgs) GetFirstArgument() interface{} {
 }
 
 type RegisterResult struct {
-	Success *user.Resp
+	Success *user.RegisterResp
 }
 
-var RegisterResult_Success_DEFAULT *user.Resp
+var RegisterResult_Success_DEFAULT *user.RegisterResp
 
 func (p *RegisterResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
-		p.Success = new(user.Resp)
+		p.Success = new(user.RegisterResp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
@@ -221,7 +221,7 @@ func (p *RegisterResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *RegisterResult) Unmarshal(in []byte) error {
-	msg := new(user.Resp)
+	msg := new(user.RegisterResp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -229,7 +229,7 @@ func (p *RegisterResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *RegisterResult) GetSuccess() *user.Resp {
+func (p *RegisterResult) GetSuccess() *user.RegisterResp {
 	if !p.IsSetSuccess() {
 		return RegisterResult_Success_DEFAULT
 	}
@@ -237,7 +237,7 @@ func (p *RegisterResult) GetSuccess() *user.Resp {
 }
 
 func (p *RegisterResult) SetSuccess(x interface{}) {
-	p.Success = x.(*user.Resp)
+	p.Success = x.(*user.RegisterResp)
 }
 
 func (p *RegisterResult) IsSetSuccess() bool {
@@ -340,14 +340,14 @@ func (p *LoginArgs) GetFirstArgument() interface{} {
 }
 
 type LoginResult struct {
-	Success *user.Resp
+	Success *user.LoginResp
 }
 
-var LoginResult_Success_DEFAULT *user.Resp
+var LoginResult_Success_DEFAULT *user.LoginResp
 
 func (p *LoginResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
-		p.Success = new(user.Resp)
+		p.Success = new(user.LoginResp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
@@ -374,7 +374,7 @@ func (p *LoginResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *LoginResult) Unmarshal(in []byte) error {
-	msg := new(user.Resp)
+	msg := new(user.LoginResp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -382,7 +382,7 @@ func (p *LoginResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *LoginResult) GetSuccess() *user.Resp {
+func (p *LoginResult) GetSuccess() *user.LoginResp {
 	if !p.IsSetSuccess() {
 		return LoginResult_Success_DEFAULT
 	}
@@ -390,7 +390,7 @@ func (p *LoginResult) GetSuccess() *user.Resp {
 }
 
 func (p *LoginResult) SetSuccess(x interface{}) {
-	p.Success = x.(*user.Resp)
+	p.Success = x.(*user.LoginResp)
 }
 
 func (p *LoginResult) IsSetSuccess() bool {
@@ -411,7 +411,7 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) Register(ctx context.Context, Req *user.RegisterReq) (r *user.Resp, err error) {
+func (p *kClient) Register(ctx context.Context, Req *user.RegisterReq) (r *user.RegisterResp, err error) {
 	var _args RegisterArgs
 	_args.Req = Req
 	var _result RegisterResult
@@ -421,7 +421,7 @@ func (p *kClient) Register(ctx context.Context, Req *user.RegisterReq) (r *user.
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) Login(ctx context.Context, Req *user.LoginReq) (r *user.Resp, err error) {
+func (p *kClient) Login(ctx context.Context, Req *user.LoginReq) (r *user.LoginResp, err error) {
 	var _args LoginArgs
 	_args.Req = Req
 	var _result LoginResult

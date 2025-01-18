@@ -57,6 +57,31 @@ func (x *RegisterReq) fastReadField3(buf []byte, _type int8) (offset int, err er
 	return offset, err
 }
 
+func (x *RegisterResp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_RegisterResp[number], err)
+}
+
+func (x *RegisterResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	return offset, err
+}
+
 func (x *LoginReq) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
 	switch number {
 	case 1:
@@ -92,15 +117,10 @@ func (x *LoginReq) fastReadField2(buf []byte, _type int8) (offset int, err error
 	return offset, err
 }
 
-func (x *Resp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+func (x *LoginResp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
 	switch number {
 	case 1:
 		offset, err = x.fastReadField1(buf, _type)
-		if err != nil {
-			goto ReadFieldError
-		}
-	case 2:
-		offset, err = x.fastReadField2(buf, _type)
 		if err != nil {
 			goto ReadFieldError
 		}
@@ -114,16 +134,11 @@ func (x *Resp) FastRead(buf []byte, _type int8, number int32) (offset int, err e
 SkipFieldError:
 	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_Resp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_LoginResp[number], err)
 }
 
-func (x *Resp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Token, offset, err = fastpb.ReadString(buf, _type)
-	return offset, err
-}
-
-func (x *Resp) fastReadField2(buf []byte, _type int8) (offset int, err error) {
-	x.RefreshToken, offset, err = fastpb.ReadString(buf, _type)
+func (x *LoginResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
 	return offset, err
 }
 
@@ -161,6 +176,22 @@ func (x *RegisterReq) fastWriteField3(buf []byte) (offset int) {
 	return offset
 }
 
+func (x *RegisterResp) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	return offset
+}
+
+func (x *RegisterResp) fastWriteField1(buf []byte) (offset int) {
+	if x.UserId == 0 {
+		return offset
+	}
+	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	return offset
+}
+
 func (x *LoginReq) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
@@ -186,28 +217,19 @@ func (x *LoginReq) fastWriteField2(buf []byte) (offset int) {
 	return offset
 }
 
-func (x *Resp) FastWrite(buf []byte) (offset int) {
+func (x *LoginResp) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
 	}
 	offset += x.fastWriteField1(buf[offset:])
-	offset += x.fastWriteField2(buf[offset:])
 	return offset
 }
 
-func (x *Resp) fastWriteField1(buf []byte) (offset int) {
-	if x.Token == "" {
+func (x *LoginResp) fastWriteField1(buf []byte) (offset int) {
+	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.GetToken())
-	return offset
-}
-
-func (x *Resp) fastWriteField2(buf []byte) (offset int) {
-	if x.RefreshToken == "" {
-		return offset
-	}
-	offset += fastpb.WriteString(buf[offset:], 2, x.GetRefreshToken())
+	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -245,6 +267,22 @@ func (x *RegisterReq) sizeField3() (n int) {
 	return n
 }
 
+func (x *RegisterResp) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	return n
+}
+
+func (x *RegisterResp) sizeField1() (n int) {
+	if x.UserId == 0 {
+		return n
+	}
+	n += fastpb.SizeInt32(1, x.GetUserId())
+	return n
+}
+
 func (x *LoginReq) Size() (n int) {
 	if x == nil {
 		return n
@@ -270,28 +308,19 @@ func (x *LoginReq) sizeField2() (n int) {
 	return n
 }
 
-func (x *Resp) Size() (n int) {
+func (x *LoginResp) Size() (n int) {
 	if x == nil {
 		return n
 	}
 	n += x.sizeField1()
-	n += x.sizeField2()
 	return n
 }
 
-func (x *Resp) sizeField1() (n int) {
-	if x.Token == "" {
+func (x *LoginResp) sizeField1() (n int) {
+	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeString(1, x.GetToken())
-	return n
-}
-
-func (x *Resp) sizeField2() (n int) {
-	if x.RefreshToken == "" {
-		return n
-	}
-	n += fastpb.SizeString(2, x.GetRefreshToken())
+	n += fastpb.SizeInt32(1, x.GetUserId())
 	return n
 }
 
@@ -301,12 +330,15 @@ var fieldIDToName_RegisterReq = map[int32]string{
 	3: "ConfirmPassword",
 }
 
+var fieldIDToName_RegisterResp = map[int32]string{
+	1: "UserId",
+}
+
 var fieldIDToName_LoginReq = map[int32]string{
 	1: "Email",
 	2: "Password",
 }
 
-var fieldIDToName_Resp = map[int32]string{
-	1: "Token",
-	2: "RefreshToken",
+var fieldIDToName_LoginResp = map[int32]string{
+	1: "UserId",
 }

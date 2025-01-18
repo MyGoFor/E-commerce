@@ -12,8 +12,8 @@ import (
 type RPCClient interface {
 	KitexClient() userservice.Client
 	Service() string
-	Register(ctx context.Context, Req *user.RegisterReq, callOptions ...callopt.Option) (r *user.Resp, err error)
-	Login(ctx context.Context, Req *user.LoginReq, callOptions ...callopt.Option) (r *user.Resp, err error)
+	Register(ctx context.Context, Req *user.RegisterReq, callOptions ...callopt.Option) (r *user.RegisterResp, err error)
+	Login(ctx context.Context, Req *user.LoginReq, callOptions ...callopt.Option) (r *user.LoginResp, err error)
 }
 
 func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
@@ -42,10 +42,10 @@ func (c *clientImpl) KitexClient() userservice.Client {
 	return c.kitexClient
 }
 
-func (c *clientImpl) Register(ctx context.Context, Req *user.RegisterReq, callOptions ...callopt.Option) (r *user.Resp, err error) {
+func (c *clientImpl) Register(ctx context.Context, Req *user.RegisterReq, callOptions ...callopt.Option) (r *user.RegisterResp, err error) {
 	return c.kitexClient.Register(ctx, Req, callOptions...)
 }
 
-func (c *clientImpl) Login(ctx context.Context, Req *user.LoginReq, callOptions ...callopt.Option) (r *user.Resp, err error) {
+func (c *clientImpl) Login(ctx context.Context, Req *user.LoginReq, callOptions ...callopt.Option) (r *user.LoginResp, err error) {
 	return c.kitexClient.Login(ctx, Req, callOptions...)
 }
