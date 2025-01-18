@@ -49,7 +49,7 @@ cwgo_kitex_client_user:
 .PHONY: cwgo_kitex_server_user
 cwgo_kitex_server_user:
 	@cd app/user && \
-	cwgo server --type RPC --idl ../../idl/user.proto --service user -module github.com/MyGoFor/E-commerce/app/user -I ../../idl --pass "github.com/MyGoFor/E-commerce/rpc_gen" && \
+	cwgo server --type RPC --idl ../../idl/user.proto --service user --pass "github.com/MyGoFor/E-commerce/rpc_gen" -module github.com/MyGoFor/E-commerce/app/user -I ../../idl && \
 	cd ../..
 
 .PHONY: docker

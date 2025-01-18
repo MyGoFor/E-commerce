@@ -15,17 +15,17 @@ import (
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
 
 var serviceMethods = map[string]kitex.MethodInfo{
-	"Register": kitex.NewMethodInfo(
-		registerHandler,
-		newRegisterArgs,
-		newRegisterResult,
+	"Token": kitex.NewMethodInfo(
+		tokenHandler,
+		newTokenArgs,
+		newTokenResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
-	"Login": kitex.NewMethodInfo(
-		loginHandler,
-		newLoginArgs,
-		newLoginResult,
+	"Refresh": kitex.NewMethodInfo(
+		refreshHandler,
+		newRefreshArgs,
+		newRefreshResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
@@ -95,73 +95,73 @@ func newServiceInfo(hasStreaming bool, keepStreamingMethods bool, keepNonStreami
 	return svcInfo
 }
 
-func registerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func tokenHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(user.RegisterReq)
+		req := new(user.TokenReq)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(user.UserService).Register(ctx, req)
+		resp, err := handler.(user.UserService).Token(ctx, req)
 		if err != nil {
 			return err
 		}
 		return st.SendMsg(resp)
-	case *RegisterArgs:
-		success, err := handler.(user.UserService).Register(ctx, s.Req)
+	case *TokenArgs:
+		success, err := handler.(user.UserService).Token(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*RegisterResult)
+		realResult := result.(*TokenResult)
 		realResult.Success = success
 		return nil
 	default:
 		return errInvalidMessageType
 	}
 }
-func newRegisterArgs() interface{} {
-	return &RegisterArgs{}
+func newTokenArgs() interface{} {
+	return &TokenArgs{}
 }
 
-func newRegisterResult() interface{} {
-	return &RegisterResult{}
+func newTokenResult() interface{} {
+	return &TokenResult{}
 }
 
-type RegisterArgs struct {
-	Req *user.RegisterReq
+type TokenArgs struct {
+	Req *user.TokenReq
 }
 
-func (p *RegisterArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *TokenArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetReq() {
-		p.Req = new(user.RegisterReq)
+		p.Req = new(user.TokenReq)
 	}
 	return p.Req.FastRead(buf, _type, number)
 }
 
-func (p *RegisterArgs) FastWrite(buf []byte) (n int) {
+func (p *TokenArgs) FastWrite(buf []byte) (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.FastWrite(buf)
 }
 
-func (p *RegisterArgs) Size() (n int) {
+func (p *TokenArgs) Size() (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.Size()
 }
 
-func (p *RegisterArgs) Marshal(out []byte) ([]byte, error) {
+func (p *TokenArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
 		return out, nil
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *RegisterArgs) Unmarshal(in []byte) error {
-	msg := new(user.RegisterReq)
+func (p *TokenArgs) Unmarshal(in []byte) error {
+	msg := new(user.TokenReq)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -169,58 +169,58 @@ func (p *RegisterArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var RegisterArgs_Req_DEFAULT *user.RegisterReq
+var TokenArgs_Req_DEFAULT *user.TokenReq
 
-func (p *RegisterArgs) GetReq() *user.RegisterReq {
+func (p *TokenArgs) GetReq() *user.TokenReq {
 	if !p.IsSetReq() {
-		return RegisterArgs_Req_DEFAULT
+		return TokenArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *RegisterArgs) IsSetReq() bool {
+func (p *TokenArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *RegisterArgs) GetFirstArgument() interface{} {
+func (p *TokenArgs) GetFirstArgument() interface{} {
 	return p.Req
 }
 
-type RegisterResult struct {
+type TokenResult struct {
 	Success *user.Resp
 }
 
-var RegisterResult_Success_DEFAULT *user.Resp
+var TokenResult_Success_DEFAULT *user.Resp
 
-func (p *RegisterResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *TokenResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
 		p.Success = new(user.Resp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
 
-func (p *RegisterResult) FastWrite(buf []byte) (n int) {
+func (p *TokenResult) FastWrite(buf []byte) (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.FastWrite(buf)
 }
 
-func (p *RegisterResult) Size() (n int) {
+func (p *TokenResult) Size() (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.Size()
 }
 
-func (p *RegisterResult) Marshal(out []byte) ([]byte, error) {
+func (p *TokenResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
 		return out, nil
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *RegisterResult) Unmarshal(in []byte) error {
+func (p *TokenResult) Unmarshal(in []byte) error {
 	msg := new(user.Resp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -229,92 +229,92 @@ func (p *RegisterResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *RegisterResult) GetSuccess() *user.Resp {
+func (p *TokenResult) GetSuccess() *user.Resp {
 	if !p.IsSetSuccess() {
-		return RegisterResult_Success_DEFAULT
+		return TokenResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *RegisterResult) SetSuccess(x interface{}) {
+func (p *TokenResult) SetSuccess(x interface{}) {
 	p.Success = x.(*user.Resp)
 }
 
-func (p *RegisterResult) IsSetSuccess() bool {
+func (p *TokenResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *RegisterResult) GetResult() interface{} {
+func (p *TokenResult) GetResult() interface{} {
 	return p.Success
 }
 
-func loginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func refreshHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(user.LoginReq)
+		req := new(user.RefreshTokenReq)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(user.UserService).Login(ctx, req)
+		resp, err := handler.(user.UserService).Refresh(ctx, req)
 		if err != nil {
 			return err
 		}
 		return st.SendMsg(resp)
-	case *LoginArgs:
-		success, err := handler.(user.UserService).Login(ctx, s.Req)
+	case *RefreshArgs:
+		success, err := handler.(user.UserService).Refresh(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*LoginResult)
+		realResult := result.(*RefreshResult)
 		realResult.Success = success
 		return nil
 	default:
 		return errInvalidMessageType
 	}
 }
-func newLoginArgs() interface{} {
-	return &LoginArgs{}
+func newRefreshArgs() interface{} {
+	return &RefreshArgs{}
 }
 
-func newLoginResult() interface{} {
-	return &LoginResult{}
+func newRefreshResult() interface{} {
+	return &RefreshResult{}
 }
 
-type LoginArgs struct {
-	Req *user.LoginReq
+type RefreshArgs struct {
+	Req *user.RefreshTokenReq
 }
 
-func (p *LoginArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *RefreshArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetReq() {
-		p.Req = new(user.LoginReq)
+		p.Req = new(user.RefreshTokenReq)
 	}
 	return p.Req.FastRead(buf, _type, number)
 }
 
-func (p *LoginArgs) FastWrite(buf []byte) (n int) {
+func (p *RefreshArgs) FastWrite(buf []byte) (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.FastWrite(buf)
 }
 
-func (p *LoginArgs) Size() (n int) {
+func (p *RefreshArgs) Size() (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.Size()
 }
 
-func (p *LoginArgs) Marshal(out []byte) ([]byte, error) {
+func (p *RefreshArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
 		return out, nil
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *LoginArgs) Unmarshal(in []byte) error {
-	msg := new(user.LoginReq)
+func (p *RefreshArgs) Unmarshal(in []byte) error {
+	msg := new(user.RefreshTokenReq)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -322,58 +322,58 @@ func (p *LoginArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var LoginArgs_Req_DEFAULT *user.LoginReq
+var RefreshArgs_Req_DEFAULT *user.RefreshTokenReq
 
-func (p *LoginArgs) GetReq() *user.LoginReq {
+func (p *RefreshArgs) GetReq() *user.RefreshTokenReq {
 	if !p.IsSetReq() {
-		return LoginArgs_Req_DEFAULT
+		return RefreshArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *LoginArgs) IsSetReq() bool {
+func (p *RefreshArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *LoginArgs) GetFirstArgument() interface{} {
+func (p *RefreshArgs) GetFirstArgument() interface{} {
 	return p.Req
 }
 
-type LoginResult struct {
+type RefreshResult struct {
 	Success *user.Resp
 }
 
-var LoginResult_Success_DEFAULT *user.Resp
+var RefreshResult_Success_DEFAULT *user.Resp
 
-func (p *LoginResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *RefreshResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
 		p.Success = new(user.Resp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
 
-func (p *LoginResult) FastWrite(buf []byte) (n int) {
+func (p *RefreshResult) FastWrite(buf []byte) (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.FastWrite(buf)
 }
 
-func (p *LoginResult) Size() (n int) {
+func (p *RefreshResult) Size() (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.Size()
 }
 
-func (p *LoginResult) Marshal(out []byte) ([]byte, error) {
+func (p *RefreshResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
 		return out, nil
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *LoginResult) Unmarshal(in []byte) error {
+func (p *RefreshResult) Unmarshal(in []byte) error {
 	msg := new(user.Resp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -382,22 +382,22 @@ func (p *LoginResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *LoginResult) GetSuccess() *user.Resp {
+func (p *RefreshResult) GetSuccess() *user.Resp {
 	if !p.IsSetSuccess() {
-		return LoginResult_Success_DEFAULT
+		return RefreshResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *LoginResult) SetSuccess(x interface{}) {
+func (p *RefreshResult) SetSuccess(x interface{}) {
 	p.Success = x.(*user.Resp)
 }
 
-func (p *LoginResult) IsSetSuccess() bool {
+func (p *RefreshResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *LoginResult) GetResult() interface{} {
+func (p *RefreshResult) GetResult() interface{} {
 	return p.Success
 }
 
@@ -411,21 +411,21 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) Register(ctx context.Context, Req *user.RegisterReq) (r *user.Resp, err error) {
-	var _args RegisterArgs
+func (p *kClient) Token(ctx context.Context, Req *user.TokenReq) (r *user.Resp, err error) {
+	var _args TokenArgs
 	_args.Req = Req
-	var _result RegisterResult
-	if err = p.c.Call(ctx, "Register", &_args, &_result); err != nil {
+	var _result TokenResult
+	if err = p.c.Call(ctx, "Token", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) Login(ctx context.Context, Req *user.LoginReq) (r *user.Resp, err error) {
-	var _args LoginArgs
+func (p *kClient) Refresh(ctx context.Context, Req *user.RefreshTokenReq) (r *user.Resp, err error) {
+	var _args RefreshArgs
 	_args.Req = Req
-	var _result LoginResult
-	if err = p.c.Call(ctx, "Login", &_args, &_result); err != nil {
+	var _result RefreshResult
+	if err = p.c.Call(ctx, "Refresh", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
