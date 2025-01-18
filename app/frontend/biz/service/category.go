@@ -2,21 +2,20 @@ package service
 
 import (
 	"context"
-
-	product "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/product"
+	category "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/category"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-type SearchProductsService struct {
+type CategoryService struct {
 	RequestContext *app.RequestContext
 	Context        context.Context
 }
 
-func NewSearchProductsService(Context context.Context, RequestContext *app.RequestContext) *SearchProductsService {
-	return &SearchProductsService{RequestContext: RequestContext, Context: Context}
+func NewCategoryService(Context context.Context, RequestContext *app.RequestContext) *CategoryService {
+	return &CategoryService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *SearchProductsService) Run(req *product.SearchProductsReq) (resp map[string]any, err error) {
+func (h *CategoryService) Run(req *category.CategoryReq) (resp map[string]any, err error) {
 	type Product struct {
 		Id          uint32
 		Name        string
@@ -35,16 +34,16 @@ func (h *SearchProductsService) Run(req *product.SearchProductsReq) (resp map[st
 	},
 		{
 			Id:          2,
-			Name:        "02.0",
-			Description: "02.0",
+			Name:        "02.1",
+			Description: "02.1",
 			Price:       1.999,
 			Categories:  []string{"Two"},
-			Picture:     "https://tuchuang.hch1212.online/img/02.webp",
+			Picture:     "https://tuchuang.hch1212.online/img/021.webp",
 		},
 	}
 	resp = map[string]any{
+		"Title": "Category",
 		"items": product,
-		"q":     req.Q,
 	}
 	return
 }

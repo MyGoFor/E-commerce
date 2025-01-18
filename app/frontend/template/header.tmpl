@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ if $.redirect }}
+    <meta http-equiv="refresh" content="5;url=/checkout/result"/>
+    {{ end}}
     <title>{{$.Title}} | Welcome</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -29,21 +32,24 @@
                             Categories
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">One</a></li>
-                            <li><a class="dropdown-item" href="#">Two</a></li>
+                            <li><a class="dropdown-item" href="/category/One">One</a></li>
+                            <li><a class="dropdown-item" href="/category/Two">Two</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex ms-auto" role="search" action="/search" method="get">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search"
+                           aria-label="Search" value="{{ .q }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
 
                 <div class="ms-3">
-                    <i class="fa-solid fa-cart-shopping me-2"></i>
+                    <a href="/cart" class="btn position-relative">
+                        <i class="fa-solid fa-cart-shopping me-2"></i>
+                    </a>
                 </div>
 
                 {{if .user_id}}

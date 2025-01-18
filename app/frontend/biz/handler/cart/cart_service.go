@@ -1,51 +1,51 @@
-package product
+package cart
 
 import (
 	"context"
 
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
-	product "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/product"
+	cart "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/cart"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-// GetProduct .
-// @router /product [GET]
-func GetProduct(ctx context.Context, c *app.RequestContext) {
+// AddCartItem .
+// @router /cart [POST]
+func AddCartItem(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req product.ProductReq
+	var req cart.AddCartReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
 
-	resp, err := service.NewGetProductService(ctx, c).Run(&req)
+	_, err = service.NewAddCartItemService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
 
-	c.HTML(consts.StatusOK, "product", utils.WarpResponse(ctx, c, resp))
+	c.Redirect(consts.StatusFound, []byte("/cart"))
 }
 
-// SearchProducts .
-// @router /search [GET]
-func SearchProducts(ctx context.Context, c *app.RequestContext) {
+// GetCart .
+// @router /cart [GET]
+func GetCart(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req product.SearchProductsReq
+	var req cart.Empty
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
 
-	resp, err := service.NewSearchProductsService(ctx, c).Run(&req)
+	resp, err := service.NewGetCartService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
 
-	c.HTML(consts.StatusOK, "search", utils.WarpResponse(ctx, c, resp))
+	c.HTML(consts.StatusOK, "cart", utils.WarpResponse(ctx, c, resp))
 }
