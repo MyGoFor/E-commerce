@@ -16,11 +16,25 @@ func NewGetProductService(Context context.Context, RequestContext *app.RequestCo
 	return &GetProductService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *GetProductService) Run(req *product.ProductReq) (resp *product.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
+func (h *GetProductService) Run(req *product.ProductReq) (resp map[string]any, err error) {
+	type Product struct {
+		Id          uint32
+		Name        string
+		Description string
+		Picture     string
+		Price       float32
+		Categories  []string
+	}
+	product := &Product{
+		Id:          1,
+		Name:        "02.0",
+		Description: "02.0",
+		Price:       1.99,
+		Categories:  []string{"One"},
+		Picture:     "https://tuchuang.hch1212.online/img/02.webp",
+	}
+	resp = map[string]any{
+		"item": product,
+	}
 	return
 }
