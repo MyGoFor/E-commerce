@@ -28,6 +28,18 @@ cwgo_hertz_cart_page:
 	cwgo server --type HTTP --idl ../../idl/frontend/cart_page.proto --service frontend -module github.com/MyGoFor/E-commerce/app/frontend -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_hertz_checkout_page
+cwgo_hertz_checkout_page:
+	@cd app/frontend && \
+	cwgo server --type HTTP --idl ../../idl/frontend/checkout_page.proto --service frontend -module github.com/MyGoFor/E-commerce/app/frontend -I ../../idl && \
+	cd ../..
+
+.PHONY: cwgo_hertz_order_page
+cwgo_hertz_order_page:
+	@cd app/frontend && \
+	cwgo server --type HTTP --idl ../../idl/frontend/order_page.proto --service frontend -module github.com/MyGoFor/E-commerce/app/frontend -I ../../idl && \
+	cd ../..
+
 .PHONY: cwgo_kitex_client_user
 cwgo_kitex_client_user:
 	@cd rpc_gen && \
