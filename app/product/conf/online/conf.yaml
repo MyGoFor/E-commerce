@@ -1,15 +1,17 @@
-hertz:
-  service: "frontend"
-  address: ":8084"
-  enable_pprof: false
-  enable_gzip: true
-  enable_access_log: true
+kitex:
+  service: "product"
+  address: ":8888"
   log_level: info
-  log_file_name: "log/hertz.log"
+  log_file_name: "log/kitex.log"
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
-  registry_addr: "127.0.0.1:8500"
+
+registry:
+  registry_address:
+    - 127.0.0.1:2379
+  username: ""
+  password: ""
 
 mysql:
   dsn: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
