@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/MyGoFor/E-commerce/app/cart/biz/dal"
+	"github.com/MyGoFor/E-commerce/app/cart/rpc"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
+	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
 	"gorm.io/gorm"
 	"log"
@@ -26,6 +28,8 @@ type Cart struct {
 }
 
 func main() {
+	_ = godotenv.Load()
+	rpc.Init()
 	dal.Init()
 	opts := kitexInit()
 

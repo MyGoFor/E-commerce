@@ -22,6 +22,7 @@ func Init() {
 			SkipDefaultTransaction: true,
 		},
 	)
+	fmt.Printf("哈哈哈哈哈哈哈哈" + dsn)
 	if err != nil {
 		panic(err)
 	}
