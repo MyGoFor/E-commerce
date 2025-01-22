@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	order "github.com/MyGoFor/E-commerce/rpc_gen/order"
+	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	"testing"
 )
 

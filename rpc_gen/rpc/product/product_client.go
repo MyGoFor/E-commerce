@@ -2,9 +2,8 @@ package product
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/rpc_gen/product"
-	"github.com/MyGoFor/E-commerce/rpc_gen/product/productcatalogservice"
-
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/callopt"
 )

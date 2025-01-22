@@ -3,7 +3,7 @@
 package productcatalogservice
 
 import (
-	"github.com/MyGoFor/E-commerce/rpc_gen/product"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	server "github.com/cloudwego/kitex/server"
 )
 

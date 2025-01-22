@@ -4,7 +4,7 @@ package orderservice
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/rpc_gen/order"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
 )

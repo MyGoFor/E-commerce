@@ -70,6 +70,18 @@ cwgo_kitex_server_product:
 	cwgo server --type RPC --idl ../../idl/product.proto --service product --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/product -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_cart
+cwgo_kitex_client_cart:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/cart.proto --service cart -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_cart
+cwgo_kitex_server_cart:
+	@cd app/cart && \
+	cwgo server --type RPC --idl ../../idl/cart.proto --service cart --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/cart -I ../../idl && \
+	cd ../..
+
 .PHONY: cwgo_kitex_client_order
 cwgo_kitex_client_order:
 	@cd rpc_gen && \

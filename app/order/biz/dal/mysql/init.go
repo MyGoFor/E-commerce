@@ -3,6 +3,8 @@ package mysql
 import (
 	"fmt"
 	"github.com/MyGoFor/E-commerce/app/order/conf"
+	"github.com/MyGoFor/E-commerce/app/order/module"
+	"log"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -24,5 +26,9 @@ func Init() {
 	)
 	if err != nil {
 		panic(err)
+	}
+	err = DB.AutoMigrate(&module.Order{}, &module.OrderItem{})
+	if err != nil {
+		log.Println(err)
 	}
 }

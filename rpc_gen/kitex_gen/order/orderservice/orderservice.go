@@ -5,7 +5,7 @@ package orderservice
 import (
 	"context"
 	"errors"
-	"github.com/MyGoFor/E-commerce/rpc_gen/order"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
 	streaming "github.com/cloudwego/kitex/pkg/streaming"
