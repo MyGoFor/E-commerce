@@ -476,7 +476,7 @@ type ListOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Orders []*Order `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
+	Orders []*Order `protobuf:"bytes,1,rep,name=order,proto3" json:"order,omitempty"`
 }
 
 func (x *ListOrderResp) Reset() {
@@ -728,7 +728,7 @@ var file_order_proto_depIdxs = []int32{
 	3,  // 3: order.PlaceOrderResp.order:type_name -> order.OrderResult
 	2,  // 4: order.Order.order_items:type_name -> order.OrderItem
 	0,  // 5: order.Order.address:type_name -> order.Address
-	6,  // 6: order.ListOrderResp.orders:type_name -> order.Order
+	6,  // 6: order.ListOrderResp.order:type_name -> order.Order
 	1,  // 7: order.OrderService.PlaceOrder:input_type -> order.PlaceOrderReq
 	5,  // 8: order.OrderService.ListOrder:input_type -> order.ListOrderReq
 	8,  // 9: order.OrderService.MarkOrderPaid:input_type -> order.MarkOrderPaidReq

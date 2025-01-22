@@ -63,8 +63,8 @@ func (h *OrderListService) Run(req *order.Empty) (resp map[string]any, err error
 	})
 
 	resp = map[string]any{
-		"Title":  "Order",
-		"orders": orders,
+		"Title": "Order",
+		"order": orders,
 	}
 	return
 }
