@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/product/biz/dal/mysql"
 	"github.com/MyGoFor/E-commerce/app/product/module"
-	product "github.com/MyGoFor/E-commerce/rpc_gen/product"
+	product "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 )
 
 type ListProductsService struct {

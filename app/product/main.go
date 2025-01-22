@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/MyGoFor/E-commerce/app/product/conf"
-	"github.com/MyGoFor/E-commerce/rpc_gen/product/productcatalogservice"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"

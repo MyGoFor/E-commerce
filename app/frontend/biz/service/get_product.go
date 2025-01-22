@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 
 	product "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/product"
+	rpcproduct "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -17,24 +20,11 @@ func NewGetProductService(Context context.Context, RequestContext *app.RequestCo
 }
 
 func (h *GetProductService) Run(req *product.ProductReq) (resp map[string]any, err error) {
-	type Product struct {
-		Id          uint32
-		Name        string
-		Description string
-		Picture     string
-		Price       float32
-		Categories  []string
+	p, err := rpc.ProductClient.GetProduct(h.Context, &rpcproduct.GetProductReq{Id: req.GetId()})
+	if err != nil {
+		return nil, err
 	}
-	product := &Product{
-		Id:          1,
-		Name:        "02.0",
-		Description: "02.0",
-		Price:       1.99,
-		Categories:  []string{"One"},
-		Picture:     "https://tuchuang.hch1212.online/img/02.webp",
-	}
-	resp = map[string]any{
-		"item": product,
-	}
-	return
+	return utils.H{
+		"item": p.Product,
+	}, nil
 }

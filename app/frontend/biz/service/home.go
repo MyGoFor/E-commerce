@@ -3,7 +3,10 @@ package service
 import (
 	"context"
 	home "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/home"
+	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type HomeService struct {
@@ -16,13 +19,13 @@ func NewHomeService(Context context.Context, RequestContext *app.RequestContext)
 }
 
 func (h *HomeService) Run(req *home.Empty) (resp map[string]any, err error) {
-	items := []map[string]any{
-		{"Name": "02.0", "Price": 1.99, "Picture": "https://tuchuang.hch1212.online/img/02.webp"},
-		{"Name": "02.1", "Price": 1.00, "Picture": "https://tuchuang.hch1212.online/img/021.webp"},
-		{"Name": "02.3", "Price": 1.05, "Picture": "https://tuchuang.hch1212.online/img/023.webp"},
+	ctx := h.Context
+	p, err := rpc.ProductClient.ListProducts(ctx, &product.ListProductsReq{})
+	if err != nil {
+		klog.Error(err)
 	}
 	resp = map[string]any{
-		"Items": items,
+		"Items": p.Products,
 		"Title": "E-commerce",
 	}
 	return
