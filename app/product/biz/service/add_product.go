@@ -3,10 +3,8 @@ package service
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/product/biz/dal/mysql"
-	"github.com/MyGoFor/E-commerce/app/product/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/product/module"
 	product "github.com/MyGoFor/E-commerce/rpc_gen/product"
-	"strconv"
 )
 
 type AddProductService struct {
@@ -27,7 +25,7 @@ func (s *AddProductService) Run(req *product.AddProductReq) (resp *product.AddPr
 		Categories:  req.Product.Categories,
 	}
 	err = mysql.DB.Create(&p).Error
-	err = redis.RedisClient.HSet(context.Background(), strconv.Itoa(int(p.Id)), "").Err()
+	//err = redis.RedisClient.HSet(context.Background(), strconv.Itoa(int(p.Id)), "").Err()
 	if err != nil {
 		return nil, err
 	}
