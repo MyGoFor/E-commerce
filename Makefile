@@ -94,6 +94,30 @@ cwgo_kitex_server_order:
 	cwgo server --type RPC --idl ../../idl/order.proto --service order --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/order -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_payment
+cwgo_kitex_client_payment:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/payment.proto --service payment -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_payment
+cwgo_kitex_server_payment:
+	@cd app/payment && \
+	cwgo server --type RPC --idl ../../idl/payment.proto --service payment --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/payment -I ../../idl && \
+	cd ../..
+
+.PHONY: cwgo_kitex_client_checkout
+cwgo_kitex_client_checkout:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/checkout.proto --service checkout -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_checkout
+cwgo_kitex_server_checkout:
+	@cd app/checkout && \
+	cwgo server --type RPC --idl ../../idl/checkout.proto --service checkout --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/checkout -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
