@@ -4,8 +4,7 @@ use (
 	./app/frontend
 	./app/user
 	rpc_gen
-	app/product
-	app/order
+	./app/product
 )
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0

@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
+	rpcproduct "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 
 	product "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/product"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -17,34 +20,12 @@ func NewSearchProductsService(Context context.Context, RequestContext *app.Reque
 }
 
 func (h *SearchProductsService) Run(req *product.SearchProductsReq) (resp map[string]any, err error) {
-	type Product struct {
-		Id          uint32
-		Name        string
-		Description string
-		Picture     string
-		Price       float32
-		Categories  []string
+	p, err := rpc.ProductClient.SearchProducts(h.Context, &rpcproduct.SearchProductsReq{Query: req.Q})
+	if err != nil {
+		return nil, err
 	}
-	product := []*Product{{
-		Id:          1,
-		Name:        "02.0",
-		Description: "02.0",
-		Price:       1.99,
-		Categories:  []string{"One"},
-		Picture:     "https://tuchuang.hch1212.online/img/02.webp",
-	},
-		{
-			Id:          2,
-			Name:        "02.0",
-			Description: "02.0",
-			Price:       1.999,
-			Categories:  []string{"Two"},
-			Picture:     "https://tuchuang.hch1212.online/img/02.webp",
-		},
-	}
-	resp = map[string]any{
-		"items": product,
+	return utils.H{
+		"items": p.Results,
 		"q":     req.Q,
-	}
-	return
+	}, nil
 }
