@@ -15,6 +15,13 @@ import (
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
 
 var serviceMethods = map[string]kitex.MethodInfo{
+	"AddProduct": kitex.NewMethodInfo(
+		addProductHandler,
+		newAddProductArgs,
+		newAddProductResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 	"ListProducts": kitex.NewMethodInfo(
 		listProductsHandler,
 		newListProductsArgs,
@@ -100,6 +107,159 @@ func newServiceInfo(hasStreaming bool, keepStreamingMethods bool, keepNonStreami
 		Extra:           extra,
 	}
 	return svcInfo
+}
+
+func addProductHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(product.AddProductReq)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(product.ProductCatalogService).AddProduct(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *AddProductArgs:
+		success, err := handler.(product.ProductCatalogService).AddProduct(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*AddProductResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newAddProductArgs() interface{} {
+	return &AddProductArgs{}
+}
+
+func newAddProductResult() interface{} {
+	return &AddProductResult{}
+}
+
+type AddProductArgs struct {
+	Req *product.AddProductReq
+}
+
+func (p *AddProductArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetReq() {
+		p.Req = new(product.AddProductReq)
+	}
+	return p.Req.FastRead(buf, _type, number)
+}
+
+func (p *AddProductArgs) FastWrite(buf []byte) (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.FastWrite(buf)
+}
+
+func (p *AddProductArgs) Size() (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.Size()
+}
+
+func (p *AddProductArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *AddProductArgs) Unmarshal(in []byte) error {
+	msg := new(product.AddProductReq)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var AddProductArgs_Req_DEFAULT *product.AddProductReq
+
+func (p *AddProductArgs) GetReq() *product.AddProductReq {
+	if !p.IsSetReq() {
+		return AddProductArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *AddProductArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *AddProductArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type AddProductResult struct {
+	Success *product.AddProductResp
+}
+
+var AddProductResult_Success_DEFAULT *product.AddProductResp
+
+func (p *AddProductResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetSuccess() {
+		p.Success = new(product.AddProductResp)
+	}
+	return p.Success.FastRead(buf, _type, number)
+}
+
+func (p *AddProductResult) FastWrite(buf []byte) (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.FastWrite(buf)
+}
+
+func (p *AddProductResult) Size() (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.Size()
+}
+
+func (p *AddProductResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *AddProductResult) Unmarshal(in []byte) error {
+	msg := new(product.AddProductResp)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *AddProductResult) GetSuccess() *product.AddProductResp {
+	if !p.IsSetSuccess() {
+		return AddProductResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *AddProductResult) SetSuccess(x interface{}) {
+	p.Success = x.(*product.AddProductResp)
+}
+
+func (p *AddProductResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *AddProductResult) GetResult() interface{} {
+	return p.Success
 }
 
 func listProductsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -569,6 +729,16 @@ func newServiceClient(c client.Client) *kClient {
 	return &kClient{
 		c: c,
 	}
+}
+
+func (p *kClient) AddProduct(ctx context.Context, Req *product.AddProductReq) (r *product.AddProductResp, err error) {
+	var _args AddProductArgs
+	_args.Req = Req
+	var _result AddProductResult
+	if err = p.c.Call(ctx, "AddProduct", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
 }
 
 func (p *kClient) ListProducts(ctx context.Context, Req *product.ListProductsReq) (r *product.ListProductsResp, err error) {

@@ -5,9 +5,18 @@ package product;
 option go_package = "/product";
 
 service ProductCatalogService {
+  rpc AddProduct(AddProductReq) returns (AddProductResp) {}
   rpc ListProducts(ListProductsReq) returns (ListProductsResp) {}
   rpc GetProduct(GetProductReq) returns (GetProductResp) {}
   rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
+}
+
+message AddProductReq{
+  Product product = 1;
+}
+
+message AddProductResp{
+  uint32 id = 1;
 }
 
 message ListProductsReq{
