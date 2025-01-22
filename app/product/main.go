@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/MyGoFor/E-commerce/app/product/biz/dal"
+	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
 	"log"
 	"net"
@@ -18,6 +19,7 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
 	dal.Init()
 	opts := kitexInit()
 
