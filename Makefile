@@ -58,6 +58,30 @@ cwgo_kitex_server_user:
 	cwgo server --type RPC --idl ../../idl/user.proto --service user --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/user -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_product
+cwgo_kitex_client_product:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/product.proto --service product -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_product
+cwgo_kitex_server_product:
+	@cd app/product && \
+	cwgo server --type RPC --idl ../../idl/product.proto --service product --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/product -I ../../idl && \
+	cd ../..
+
+.PHONY: cwgo_kitex_client_order
+cwgo_kitex_client_order:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/order.proto --service order -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_order
+cwgo_kitex_server_order:
+	@cd app/order && \
+	cwgo server --type RPC --idl ../../idl/order.proto --service order --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/order -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
