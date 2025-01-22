@@ -4,7 +4,7 @@ package cartservice
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
+	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
 )
@@ -14,11 +14,6 @@ type Client interface {
 	AddItem(ctx context.Context, Req *cart.AddItemReq, callOptions ...callopt.Option) (r *cart.AddItemResp, err error)
 	GetCart(ctx context.Context, Req *cart.GetCartReq, callOptions ...callopt.Option) (r *cart.GetCartResp, err error)
 	EmptyCart(ctx context.Context, Req *cart.EmptyCartReq, callOptions ...callopt.Option) (r *cart.EmptyCartResp, err error)
-}
-
-func (c Client) Call(ctx context.Context, method string, request, response interface{}) error {
-	//TODO implement me
-	panic("implement me")
 }
 
 // NewClient creates a client for the service defined in IDL.

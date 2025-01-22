@@ -2,7 +2,7 @@
 package cartservice
 
 import (
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
+	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	server "github.com/cloudwego/kitex/server"
 )
 
