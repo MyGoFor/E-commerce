@@ -10,8 +10,12 @@ func TestCharge_Run(t *testing.T) {
 	ctx := context.Background()
 	s := NewChargeService(ctx)
 	// init req and assert value
-
-	req := &payment.ChargeReq{}
+	req := &payment.ChargeReq{
+		Amount:     1000,
+		OrderId:    "1",
+		UserId:     1,
+		CreditCard: nil,
+	}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)

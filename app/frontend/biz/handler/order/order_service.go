@@ -2,6 +2,7 @@ package order
 
 import (
 	"context"
+	hertzUtils "github.com/cloudwego/hertz/pkg/common/utils"
 
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
@@ -23,7 +24,7 @@ func OrderList(ctx context.Context, c *app.RequestContext) {
 
 	resp, err := service.NewOrderListService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "order", hertzUtils.H{"error": err})
 		return
 	}
 

@@ -3,11 +3,10 @@ package service
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/order/biz/dal/mysql"
-	"github.com/MyGoFor/E-commerce/app/order/module"
+	"github.com/MyGoFor/E-commerce/app/order/biz/model"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
-	"log"
-	"strconv"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type ListOrderService struct {
@@ -20,42 +19,41 @@ func NewListOrderService(ctx context.Context) *ListOrderService {
 // Run create note info
 func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
 	// Finish your business logic.
-	var orders []*module.Order
-	err = mysql.DB.Where("user_id = ?", req.UserId).Find(&orders).Error
+	orders, err := model.ListOrder(mysql.DB, s.ctx, req.UserId)
 	if err != nil {
-		log.Println(err)
+		klog.Errorf("model.ListOrder.err:%v", err)
 		return nil, err
 	}
-	var RespOrders []*order.Order
+	var list []*order.Order
 	for _, v := range orders {
-		var Items []*order.OrderItem
-		for _, k := range v.OrderItems {
-			i := &order.OrderItem{
+		var items []*order.OrderItem
+		for _, v := range v.OrderItems {
+			items = append(items, &order.OrderItem{
+				Cost: v.Cost,
 				Item: &cart.CartItem{
-					ProductId: k.ProductId,
-					Quantity:  k.Quantity,
+					ProductId: v.ProductId,
+					Quantity:  v.Quantity,
 				},
-				Cost: k.Cost,
-			}
-			Items = append(Items, i)
+			})
 		}
-		atom, _ := strconv.Atoi(v.CreatedAt.String())
 		o := &order.Order{
-			OrderItems:   Items,
 			OrderId:      v.OrderId,
 			UserId:       v.UserId,
 			UserCurrency: v.UserCurrency,
+			Email:        v.Consignee.Email,
+			CreatedAt:    int32(v.CreatedAt.Unix()),
 			Address: &order.Address{
-				StreetAddress: v.Consignee.StreetAddress,
-				City:          v.Consignee.City,
-				State:         v.Consignee.State,
 				Country:       v.Consignee.Country,
+				City:          v.Consignee.City,
+				StreetAddress: v.Consignee.StreetAddress,
 				ZipCode:       v.Consignee.ZipCode,
 			},
-			Email:     v.Consignee.Email,
-			CreatedAt: int32(atom),
+			OrderItems: items,
 		}
-		RespOrders = append(RespOrders, o)
+		list = append(list, o)
 	}
-	return &order.ListOrderResp{Orders: RespOrders}, nil
+	resp = &order.ListOrderResp{
+		Orders: list,
+	}
+	return
 }

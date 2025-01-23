@@ -20,9 +20,6 @@ var (
 	CheckoutClient checkoutservice.Client
 	OrderClient    orderservice.Client
 	once           sync.Once
-	err            error
-	registryAddr   string
-	commonSuite    client.Option
 )
 
 func Init() {
@@ -30,7 +27,8 @@ func Init() {
 		initUserClient()
 		initProductClient()
 		initCartClient()
-		//initOrderClient()
+		initOrderClient()
+		initCheckoutClient()
 	})
 }
 
@@ -73,6 +71,17 @@ func initOrderClient() {
 		hlog.Fatal(err)
 	}
 	OrderClient, err = orderservice.NewClient("order", client.WithResolver(r))
+	if err != nil {
+		hlog.Fatal(err)
+	}
+}
+
+func initCheckoutClient() {
+	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
+	if err != nil {
+		hlog.Fatal(err)
+	}
+	CheckoutClient, err = checkoutservice.NewClient("checkout", client.WithResolver(r))
 	if err != nil {
 		hlog.Fatal(err)
 	}

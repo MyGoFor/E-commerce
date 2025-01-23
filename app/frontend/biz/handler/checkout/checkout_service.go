@@ -2,6 +2,7 @@ package checkout
 
 import (
 	"context"
+	hertzUtils "github.com/cloudwego/hertz/pkg/common/utils"
 
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
@@ -17,7 +18,7 @@ func Checkout(ctx context.Context, c *app.RequestContext) {
 	var req checkout.CheckoutReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "checkout", utils.WarpResponse(ctx, c, hertzUtils.H{"warning": err}))
 		return
 	}
 
@@ -34,16 +35,16 @@ func Checkout(ctx context.Context, c *app.RequestContext) {
 // @router /checkout/waiting [POST]
 func CheckoutWaiting(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req checkout.Empty
+	var req checkout.CheckoutReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "waiting", utils.WarpResponse(ctx, c, hertzUtils.H{"warning": err}))
 		return
 	}
 
 	resp, err := service.NewCheckoutWaitingService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "waiting", utils.WarpResponse(ctx, c, hertzUtils.H{"error": err}))
 		return
 	}
 
@@ -57,13 +58,13 @@ func CheckoutResult(ctx context.Context, c *app.RequestContext) {
 	var req checkout.Empty
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "waiting", utils.WarpResponse(ctx, c, hertzUtils.H{"warning": err}))
 		return
 	}
 
 	resp, err := service.NewCheckoutResultService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "waiting", utils.WarpResponse(ctx, c, hertzUtils.H{"error": err}))
 		return
 	}
 

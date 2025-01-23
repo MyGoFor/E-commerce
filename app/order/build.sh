@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-RUN_NAME="product"
+RUN_NAME="order"
 mkdir -p output/bin output/conf
 cp script/* output/
 cp -r conf/* output/conf
