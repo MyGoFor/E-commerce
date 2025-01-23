@@ -2,7 +2,8 @@ package cart
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
+	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
+
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/callopt"

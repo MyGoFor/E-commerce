@@ -1,11 +1,17 @@
 package main
 
 import (
+	"github.com/MyGoFor/E-commerce/app/cart/biz/dal"
+	"github.com/MyGoFor/E-commerce/app/cart/rpc"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
+	"github.com/joho/godotenv"
+	consul "github.com/kitex-contrib/registry-consul"
+	"gorm.io/gorm"
+	"log"
 	"net"
 	"time"
 
 	"github.com/MyGoFor/E-commerce/app/cart/conf"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -14,7 +20,18 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+type Cart struct {
+	gorm.Model
+	UserID    uint32 `gorm:"type:int(11);not null;index;"`
+	ProductID uint32 `gorm:"type:int(11);not null;"`
+	Qty       uint32 `gorm:"type:int(11);not null;"`
+}
+
 func main() {
+	_ = godotenv.Load()
+	rpc.Init()
+	dal.Init()
+
 	opts := kitexInit()
 
 	svr := cartservice.NewServer(new(CartServiceImpl), opts...)
@@ -33,10 +50,15 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
-	}))
+	}), server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()
