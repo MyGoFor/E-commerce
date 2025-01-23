@@ -1,6 +1,10 @@
 package main
 
 import (
+	"github.com/MyGoFor/E-commerce/app/payment/biz/dal"
+	"github.com/joho/godotenv"
+	consul "github.com/kitex-contrib/registry-consul"
+	"log"
 	"net"
 	"time"
 
@@ -14,7 +18,13 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var serviceName = conf.GetConf().Kitex.Service
+
 func main() {
+	_ = godotenv.Load()
+
+	dal.Init()
+
 	opts := kitexInit()
 
 	svr := paymentservice.NewServer(new(PaymentServiceImpl), opts...)
@@ -37,6 +47,13 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
+
+	// consul服务注册中心
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

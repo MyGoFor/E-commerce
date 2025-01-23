@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 
 	checkout "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/checkout"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -17,6 +18,5 @@ func NewCheckoutResultService(Context context.Context, RequestContext *app.Reque
 }
 
 func (h *CheckoutResultService) Run(req *checkout.Empty) (resp map[string]any, err error) {
-	resp = map[string]any{}
-	return
+	return utils.H{}, nil
 }

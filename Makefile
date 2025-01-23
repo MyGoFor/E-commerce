@@ -121,3 +121,31 @@ cwgo_kitex_server_checkout:
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
+
+.PHONY: user_run
+user_run:
+	@cd app/user && go run . && cd ../.. \
+
+.PHONY: product_run
+product_run:
+	cd app/product && go run . && cd ../.. \
+
+.PHONY: cart_run
+cart_run:
+	cd app/cart && go run . && cd ../.. \
+
+.PHONY: order_run
+order_run:
+	cd app/order && go run . && cd ../.. \
+
+.PHONY: payment_run
+payment_run:
+	cd app/payment && go run . && cd ../.. \
+
+.PHONY: checkout_run
+checkout_run:
+	cd app/checkout && go run . && cd ../.. \
+
+.PHONY: frontend_run
+frontend_run:
+	cd app/frontend && go run . && cd ../.. \

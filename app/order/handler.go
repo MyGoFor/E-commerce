@@ -6,7 +6,6 @@ import (
 	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 )
 
-// 1
 // OrderServiceImpl implements the last service interface defined in the IDL.
 type OrderServiceImpl struct{}
 
