@@ -122,30 +122,30 @@ cwgo_kitex_server_checkout:
 consul:
 	@open "http://localhost:8500/ui/"
 
-.PHONY: run_user
-run_user:
+.PHONY: user_run
+user_run:
 	@cd app/user && go run . && cd ../.. \
 
-.PHONY: run_product
-run_product:
+.PHONY: product_run
+product_run:
 	cd app/product && go run . && cd ../.. \
 
-.PHONY: run_cart
-run_cart:
+.PHONY: cart_run
+cart_run:
 	cd app/cart && go run . && cd ../.. \
 
-.PHONY: run_order
-run_order:
+.PHONY: order_run
+order_run:
 	cd app/order && go run . && cd ../.. \
 
-.PHONY: run_payment
-run_payment:
+.PHONY: payment_run
+payment_run:
 	cd app/payment && go run . && cd ../.. \
 
-.PHONY: run_checkout
-run_checkout:
+.PHONY: checkout_run
+checkout_run:
 	cd app/checkout && go run . && cd ../.. \
 
-.PHONY: run_frontend
-run_frontend:
+.PHONY: frontend_run
+frontend_run:
 	cd app/frontend && go run . && cd ../.. \
