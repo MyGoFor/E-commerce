@@ -2,7 +2,10 @@ module github.com/MyGoFor/E-commerce/app/frontend
 
 go 1.23.2
 
-replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
+replace (
+	github.com/MyGoFor/E-commerce/rpc_gen => ../../rpc_gen
+	github.com/apache/thrift => github.com/apache/thrift v0.13.0
+)
 
 require (
 	github.com/cloudwego/hertz v0.9.5

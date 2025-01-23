@@ -3,6 +3,7 @@ package rpc
 import (
 	"github.com/MyGoFor/E-commerce/app/frontend/conf"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/user/userservice"
@@ -13,15 +14,15 @@ import (
 )
 
 var (
-	ProductClient productcatalogservice.Client
-	UserClient    userservice.Client
-	CartClient    cartservice.Client
-	//CheckoutClient checkoutservice.Client
-	OrderClient  orderservice.Client
-	once         sync.Once
-	err          error
-	registryAddr string
-	commonSuite  client.Option
+	ProductClient  productcatalogservice.Client
+	UserClient     userservice.Client
+	CartClient     cartservice.Client
+	CheckoutClient checkoutservice.Client
+	OrderClient    orderservice.Client
+	once           sync.Once
+	err            error
+	registryAddr   string
+	commonSuite    client.Option
 )
 
 func Init() {
@@ -29,7 +30,7 @@ func Init() {
 		initUserClient()
 		initProductClient()
 		initCartClient()
-		initOrderClient()
+		//initOrderClient()
 	})
 }
 

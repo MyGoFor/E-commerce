@@ -2,7 +2,8 @@ package order
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
+	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
+
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/callopt"

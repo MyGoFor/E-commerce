@@ -2,11 +2,11 @@ package cart
 
 import (
 	"context"
-
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
 	cart "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/cart"
 	"github.com/cloudwego/hertz/pkg/app"
+	hertzUtils "github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
@@ -17,13 +17,13 @@ func AddCartItem(ctx context.Context, c *app.RequestContext) {
 	var req cart.AddCartReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "cart", utils.WarpResponse(ctx, c, hertzUtils.H{"warning": err}))
 		return
 	}
 
 	_, err = service.NewAddCartItemService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "cart", utils.WarpResponse(ctx, c, hertzUtils.H{"error": err}))
 		return
 	}
 
@@ -37,13 +37,13 @@ func GetCart(ctx context.Context, c *app.RequestContext) {
 	var req cart.Empty
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "cart", utils.WarpResponse(ctx, c, hertzUtils.H{"warning": err}))
 		return
 	}
 
 	resp, err := service.NewGetCartService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		c.HTML(consts.StatusOK, "cart", utils.WarpResponse(ctx, c, hertzUtils.H{"error": err}))
 		return
 	}
 

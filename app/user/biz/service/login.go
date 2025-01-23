@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"errors"
 	"github.com/MyGoFor/E-commerce/app/user/biz/dal/mysql"
 	"github.com/MyGoFor/E-commerce/app/user/biz/model"
 	user "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/user"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,19 +19,14 @@ func NewLoginService(ctx context.Context) *LoginService {
 // Run create note info
 func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error) {
 	// Finish your business logic.
-	if req.Email == "" || req.Password == "" {
-		return nil, errors.New("email or password is empty")
-	}
-
-	row, err := model.GetByEmail(mysql.DB, s.ctx, req.Email)
+	klog.Infof("LoginReq:%+v", req)
+	userRow, err := model.GetByEmail(mysql.DB, s.ctx, req.Email)
 	if err != nil {
-		return nil, err
+		return
 	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(row.Password), []byte(req.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(userRow.Password), []byte(req.Password))
 	if err != nil {
-		return nil, err
+		return
 	}
-
-	return &user.LoginResp{UserId: int32(row.ID)}, nil
+	return &user.LoginResp{UserId: int32(userRow.ID)}, nil
 }
