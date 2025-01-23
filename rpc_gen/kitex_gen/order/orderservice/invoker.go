@@ -3,7 +3,7 @@
 package orderservice
 
 import (
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
+	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	server "github.com/cloudwego/kitex/server"
 )
 

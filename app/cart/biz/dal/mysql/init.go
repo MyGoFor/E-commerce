@@ -16,8 +16,7 @@ var (
 )
 
 func Init() {
-	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"))
-	DB, err = gorm.Open(mysql.Open(dsn),
+	DB, err = gorm.Open(mysql.Open(fmt.Sprintf(conf.GetConf().MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"))),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -26,5 +25,8 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	_ = DB.AutoMigrate(&model.Cart{})
+
+	_ = DB.AutoMigrate(
+		&model.Cart{},
+	)
 }

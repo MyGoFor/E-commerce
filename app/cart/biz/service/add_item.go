@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/dal/mysql"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/model"
-	"github.com/MyGoFor/E-commerce/app/cart/rpc"
+	"github.com/MyGoFor/E-commerce/app/cart/infra/rpc"
 	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/kitex/pkg/kerrors"
@@ -19,8 +19,7 @@ func NewAddItemService(ctx context.Context) *AddItemService {
 
 // Run create note info
 func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err error) {
-	// Finish your business logic.
-	getProduct, err := rpc.ProductClient.GetProduct(s.ctx, &product.GetProductReq{Id: req.Item.ProductId})
+	getProduct, err := rpc.ProductClient.GetProduct(s.ctx, &product.GetProductReq{Id: req.Item.GetProductId()})
 	if err != nil {
 		return nil, err
 	}
@@ -29,13 +28,11 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		return nil, kerrors.NewBizStatusError(40004, "product not exist")
 	}
 
-	cartItem := &model.Cart{
-		UserID:    req.UserId,
-		ProductID: req.Item.ProductId,
+	err = model.AddCart(mysql.DB, s.ctx, &model.Cart{
+		UserId:    req.UserId,
+		ProductId: req.Item.ProductId,
 		Qty:       uint32(req.Item.Quantity),
-	}
-
-	err = model.AddItem(s.ctx, mysql.DB, cartItem)
+	})
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(50000, err.Error())
 	}

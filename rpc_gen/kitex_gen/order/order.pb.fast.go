@@ -4,7 +4,7 @@ package order
 
 import (
 	fmt "fmt"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
+	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	fastpb "github.com/cloudwego/fastpb"
 )
 
