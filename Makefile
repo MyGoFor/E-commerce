@@ -118,6 +118,18 @@ cwgo_kitex_server_checkout:
 	cwgo server --type RPC --idl ../../idl/checkout.proto --service checkout --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/checkout -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_email
+cwgo_kitex_client_email:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/email.proto --service email -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_email
+cwgo_kitex_server_email:
+	@cd app/email && \
+	cwgo server --type RPC --idl ../../idl/email.proto --service email --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/email -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
@@ -145,6 +157,10 @@ payment_run:
 .PHONY: checkout_run
 checkout_run:
 	cd app/checkout && go run . && cd ../.. \
+
+.PHONY: email_run
+email_run:
+	cd app/email && go run . && cd ../.. \
 
 .PHONY: frontend_run
 frontend_run:

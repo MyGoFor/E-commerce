@@ -1,15 +1,15 @@
 services:
-  mysql:
-    image: "mysql:8.0.39"
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=041212
-      - MYSQL_DATABASE=E-commerce
-  redis:
-    image: "redis:7.0.15"
-    ports:
-      - "6379:6379"
+#  mysql:
+#    image: "mysql:8.0.39"
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=041212
+#      - MYSQL_DATABASE=E-commerce
+#  redis:
+#    image: "redis:7.0.15"
+#    ports:
+#      - "6379:6379"
   consul:
     image: "hashicorp/consul:1.15.4"
     ports:
@@ -37,11 +37,11 @@ services:
 #    ports:
 #      - 2379:2379
 #      - 2380:2380
-#  nats:
-#    image: nats:latest
-#    ports:
-#      - "4222:4222"
-#      - "8222:8222"
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "8222:8222"
 #
 #  grafana:
 #    image: grafana/grafana:latest

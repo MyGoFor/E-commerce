@@ -12,6 +12,7 @@
 | Session(redis)                                                               | 保持登陆状态    |
 | Prometheus                                                                   | -         |
 | Jaeger                                                                       | -         |
-| Docker                                                                       | -         |
+| Docker                                                                       | 容器化       |
 | [bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | 前端框架      |
 | air                                                                          | 热加载       |
+| nats                                                                         | 消息中间件     |
