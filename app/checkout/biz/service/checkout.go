@@ -4,13 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/MyGoFor/E-commerce/app/checkout/infra/mq"
 	"github.com/MyGoFor/E-commerce/app/checkout/infra/rpc"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	checkout "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/checkout"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/email"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/nats-io/nats.go"
+	"google.golang.org/protobuf/proto"
 	"strconv"
 )
 
@@ -112,19 +116,21 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		err = fmt.Errorf("Charge.err:%v", err)
 		return
 	}
-	//data, _ := proto.Marshal(&email.EmailReq{
-	//	From:        "from@example.com",
-	//	To:          req.Email,
-	//	ContentType: "text/plain",
-	//	Subject:     "You just created an order in CloudWeGo shop",
-	//	Content:     "You just created an order in CloudWeGo shop",
-	//})
-	//msg := &nats.Msg{Subject: "email", Data: data, Header: make(nats.Header)}
-	//
+
+	// 消息生产者，checkout成功就发送消息
+	data, _ := proto.Marshal(&email.EmailReq{
+		From:        "from@example.com",
+		To:          req.Email,
+		ContentType: "text/plain",
+		Subject:     "You just created an order in CloudWeGo shop",
+		Content:     "You just created an order in CloudWeGo shop",
+	})
+	msg := &nats.Msg{Subject: "email", Data: data, Header: make(nats.Header)}
+
 	//// otel inject
 	//otel.GetTextMapPropagator().Inject(s.ctx, propagation.HeaderCarrier(msg.Header))
-	//
-	//_ = mq.Nc.PublishMsg(msg)
+
+	_ = mq.Nc.PublishMsg(msg)
 
 	klog.Info(paymentResult)
 	// change order state

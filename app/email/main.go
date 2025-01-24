@@ -1,16 +1,13 @@
 package main
 
 import (
-	"github.com/MyGoFor/E-commerce/app/checkout/infra/mq"
-	"github.com/MyGoFor/E-commerce/app/checkout/infra/rpc"
-	"github.com/joho/godotenv"
-	consul "github.com/kitex-contrib/registry-consul"
-	"log"
+	"github.com/MyGoFor/E-commerce/app/email/biz/consumer"
+	"github.com/MyGoFor/E-commerce/app/email/infra/mq"
 	"net"
 	"time"
 
-	"github.com/MyGoFor/E-commerce/app/checkout/conf"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/checkout/checkoutservice"
+	"github.com/MyGoFor/E-commerce/app/email/conf"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/email/emailservice"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -20,14 +17,12 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load()
-	rpc.InitClient()
-
 	mq.Init()
+	consumer.Init()
 
 	opts := kitexInit()
 
-	svr := checkoutservice.NewServer(new(CheckoutServiceImpl), opts...)
+	svr := emailservice.NewServer(new(EmailServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {
@@ -47,13 +42,6 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
-
-	// consul服务注册中心
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()
