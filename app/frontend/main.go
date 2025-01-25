@@ -6,6 +6,9 @@ import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
 	"github.com/MyGoFor/E-commerce/app/frontend/middleware"
+	frontendutils "github.com/MyGoFor/E-commerce/app/frontend/utils"
+	"github.com/MyGoFor/E-commerce/common/mtl"
+	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
 	"os"
@@ -29,14 +32,24 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var (
+	ServiceName  = frontendutils.ServiceName
+	MetricsPort  = conf.GetConf().Hertz.MatricesPort
+	RegistryAddr = conf.GetConf().Hertz.RegistryAddr
+)
+
 func main() {
 	_ = godotenv.Load()
+	consul, registryInfo := mtl.InitMetric(ServiceName, MetricsPort, RegistryAddr)
+	defer consul.Deregister(registryInfo) // 反注册掉 prometheus 上的实例
+
 	// init dal
 	// dal.Init()
 	rpc.Init()
 
 	address := conf.GetConf().Hertz.Address
-	h := server.New(server.WithHostPorts(address))
+	h := server.New(server.WithHostPorts(address),
+		server.WithTracer(prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true), prometheus.WithRegistry(mtl.Registry))))
 
 	registerMiddleware(h)
 

@@ -4,8 +4,10 @@ go 1.23.2
 
 replace (
 	github.com/MyGoFor/E-commerce/rpc_gen => ../../rpc_gen
+	github.com/MyGoFor/E-commerce/common => ../../common
 	github.com/apache/thrift => github.com/apache/thrift v0.13.0
 )
+
 
 require (
 	github.com/MyGoFor/E-commerce/rpc_gen v0.0.0-00010101000000-000000000000

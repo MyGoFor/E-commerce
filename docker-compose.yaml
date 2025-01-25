@@ -22,14 +22,14 @@ services:
 #      - "16686:16686"
 #      - "4317:4317"
 #      - "4318:4318"
-#  prometheus:
-#    image: prom/prometheus:latest
-#    volumes:
-#      - ./deploy/config/prometheus.yml:/etc/prometheus/prometheus.yml
-#    command:
-#      - "--config.file=/etc/prometheus/prometheus.yml"
-#    ports:
-#      - "9090:9090"
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./deploy/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
 #  etcd:
 #    image: docker.io/bitnami/etcd:3.5
 #    environment:
@@ -43,14 +43,14 @@ services:
       - "4222:4222"
       - "8222:8222"
 #
-#  grafana:
-#    image: grafana/grafana:latest
-#    environment:
-#      - GF_AUTH_ANONYMOUS_ENABLED=true
-#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-#      - GF_AUTH_DISABLE_LOGIN_FORM=true
-#    ports:
-#      - "3000:3000"
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
 #
 #  loki:
 #    image: grafana/loki:2.9.2

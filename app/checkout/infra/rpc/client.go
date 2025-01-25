@@ -16,12 +16,12 @@ package rpc
 
 import (
 	"github.com/MyGoFor/E-commerce/app/checkout/conf"
+	"github.com/MyGoFor/E-commerce/common/clientsuite"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment/paymentservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	consul "github.com/kitex-contrib/registry-consul"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
@@ -33,6 +33,9 @@ var (
 	PaymentClient paymentservice.Client
 	OrderClient   orderservice.Client
 	once          sync.Once
+	err           error
+	ServiceName   = conf.GetConf().Kitex.Service
+	RegistryAddr  = conf.GetConf().Registry.RegistryAddress[0]
 )
 
 func InitClient() {
@@ -45,44 +48,52 @@ func InitClient() {
 }
 
 func initProductClient() {
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		hlog.Fatal(err)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
 	}
-	ProductClient, err = productcatalogservice.NewClient("product", client.WithResolver(r))
+	ProductClient, err = productcatalogservice.NewClient("product", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}
 }
 
 func initCartClient() {
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		hlog.Fatal(err)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
 	}
-	CartClient, err = cartservice.NewClient("cart", client.WithResolver(r))
+	CartClient, err = cartservice.NewClient("cart", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}
 }
 
 func initPaymentClient() {
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		hlog.Fatal(err)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
 	}
-	PaymentClient, err = paymentservice.NewClient("payment", client.WithResolver(r))
+	PaymentClient, err = paymentservice.NewClient("payment", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}
 }
 
 func initOrderClient() {
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		hlog.Fatal(err)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
 	}
-	OrderClient, err = orderservice.NewClient("order", client.WithResolver(r))
+	OrderClient, err = orderservice.NewClient("order", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}
