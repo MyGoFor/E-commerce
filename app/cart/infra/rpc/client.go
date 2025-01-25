@@ -16,9 +16,9 @@ package rpc
 
 import (
 	"github.com/MyGoFor/E-commerce/app/cart/conf"
+	"github.com/MyGoFor/E-commerce/common/clientsuite"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	consul "github.com/kitex-contrib/registry-consul"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
@@ -28,8 +28,8 @@ var (
 	ProductClient productcatalogservice.Client
 	once          sync.Once
 	err           error
-	registryAddr  string
-	serviceName   string
+	ServiceName   = conf.GetConf().Kitex.Service
+	RegistryAddr  = conf.GetConf().Registry.RegistryAddress[0]
 )
 
 func InitClient() {
@@ -39,11 +39,13 @@ func InitClient() {
 }
 
 func initProductClient() {
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		hlog.Fatal(err)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
 	}
-	ProductClient, err = productcatalogservice.NewClient("product", client.WithResolver(r))
+	ProductClient, err = productcatalogservice.NewClient("product", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}

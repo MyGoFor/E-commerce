@@ -4,8 +4,10 @@ go 1.23.2
 
 replace (
 	github.com/MyGoFor/E-commerce/rpc_gen => ../../rpc_gen
+	github.com/MyGoFor/E-commerce/common => ../../common
 	github.com/apache/thrift => github.com/apache/thrift v0.13.0
 )
+
 
 require (
 	github.com/cloudwego/hertz v0.9.5
@@ -28,6 +30,7 @@ require (
 )
 
 require (
+	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/gopkg v0.1.0 // indirect
 	github.com/bytedance/sonic v1.12.0 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
@@ -45,12 +48,18 @@ require (
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/gorilla/sessions v1.2.2 // indirect
+	github.com/hertz-contrib/monitor-prometheus v0.1.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/nyaruka/phonenumbers v1.3.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/prometheus/client_golang v1.17.0 // indirect
+	github.com/prometheus/client_model v0.5.0 // indirect
+	github.com/prometheus/common v0.45.0 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect

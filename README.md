@@ -10,11 +10,11 @@
 | MySQL                                                                        | 数据库           |
 | Redis                                                                        | 缓存            |
 | Session(redis)                                                               | 保持登陆状态        |
-| Prometheus                                                                   | -             |
-| Jaeger                                                                       | -             |
 | Docker                                                                       | 容器化           |
 | [bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | 前端框架          |
 | air                                                                          | 热加载           |
 | nats                                                                         | 消息中间件(结帐成功发送) |
 | casbin(rbac)                                                                 | 权限控制(用户与商家)   |
-
+| Prometheus                                                                   | 指标            |
+| Jaeger                                                                       | -             |
+| grafana                                                                   | 数据面板          |
