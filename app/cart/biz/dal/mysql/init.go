@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/model"
 	"github.com/MyGoFor/E-commerce/app/cart/conf"
+	"gorm.io/plugin/opentelemetry/tracing"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -23,6 +24,10 @@ func Init() {
 		},
 	)
 	if err != nil {
+		panic(err)
+	}
+
+	if err = DB.Use(tracing.NewPlugin(tracing.WithoutMetrics())); err != nil {
 		panic(err)
 	}
 

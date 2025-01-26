@@ -140,28 +140,36 @@ user_run:
 
 .PHONY: product_run
 product_run:
-	cd app/product && go run . && cd ../.. \
+	@cd app/product && go run . && cd ../.. \
 
 .PHONY: cart_run
 cart_run:
-	cd app/cart && go run . && cd ../.. \
+	@cd app/cart && go run . && cd ../.. \
 
 .PHONY: order_run
 order_run:
-	cd app/order && go run . && cd ../.. \
+	@cd app/order && go run . && cd ../.. \
 
 .PHONY: payment_run
 payment_run:
-	cd app/payment && go run . && cd ../.. \
+	@cd app/payment && go run . && cd ../.. \
 
 .PHONY: checkout_run
 checkout_run:
-	cd app/checkout && go run . && cd ../.. \
+	@cd app/checkout && go run . && cd ../.. \
 
 .PHONY: email_run
 email_run:
-	cd app/email && go run . && cd ../.. \
+	@cd app/email && go run . && cd ../.. \
 
 .PHONY: frontend_run
 frontend_run:
-	cd app/frontend && go run . && cd ../.. \
+	@cd app/frontend && go run . && cd ../.. \
+
+.PHONY: grafana
+grafana:
+	@open "http://localhost:3000"
+
+.PHONY: jaeger
+jaeger:
+	@open "http://localhost:16686/search"
