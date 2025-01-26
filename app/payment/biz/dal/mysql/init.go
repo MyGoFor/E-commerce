@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/MyGoFor/E-commerce/app/payment/biz/model"
 	"github.com/MyGoFor/E-commerce/app/payment/conf"
+	"gorm.io/plugin/opentelemetry/tracing"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -26,6 +27,11 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+
+	if err = DB.Use(tracing.NewPlugin(tracing.WithoutMetrics())); err != nil {
+		panic(err)
+	}
+
 	_ = DB.AutoMigrate(
 		&model.PaymentLog{},
 	)

@@ -1,16 +1,21 @@
 package email
 
 import (
+	"context"
 	"github.com/MyGoFor/E-commerce/app/email/infra/mq"
 	"github.com/MyGoFor/E-commerce/app/email/infra/notify"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/email"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
 	"github.com/nats-io/nats.go"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"google.golang.org/protobuf/proto"
 )
 
 func ConsumerInit() {
+	tracer := otel.Tracer("shop-nats-consumer")
+
 	// 订阅一个主题
 	sub, err := mq.Nc.Subscribe("email", func(msg *nats.Msg) {
 		var req email.EmailReq
@@ -20,6 +25,11 @@ func ConsumerInit() {
 			klog.Error("proto.Unmarshal", err)
 			return
 		}
+		// otel
+		ctx := context.Background()
+		ctx = otel.GetTextMapPropagator().Extract(ctx, propagation.HeaderCarrier(msg.Header))
+		_, span := tracer.Start(ctx, "shop-email-consumer")
+		defer span.End()
 
 		// 发送消息
 		noopEmail := notify.NewNoopEmail()

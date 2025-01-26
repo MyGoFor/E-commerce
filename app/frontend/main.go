@@ -5,7 +5,6 @@ package main
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
-	"github.com/MyGoFor/E-commerce/app/frontend/middleware"
 	frontendutils "github.com/MyGoFor/E-commerce/app/frontend/utils"
 	"github.com/MyGoFor/E-commerce/common/mtl"
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
@@ -26,6 +25,8 @@ import (
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	hertzobslogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
+	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap/zapcore"
@@ -43,13 +44,21 @@ func main() {
 	consul, registryInfo := mtl.InitMetric(ServiceName, MetricsPort, RegistryAddr)
 	defer consul.Deregister(registryInfo) // 反注册掉 prometheus 上的实例
 
+	p := mtl.InitTracing(ServiceName)
+	defer p.Shutdown(context.Background())
+
 	// init dal
 	// dal.Init()
 	rpc.Init()
 
 	address := conf.GetConf().Hertz.Address
+
+	tracer, cfg := hertztracing.NewServerTracer()
 	h := server.New(server.WithHostPorts(address),
-		server.WithTracer(prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true), prometheus.WithRegistry(mtl.Registry))))
+		server.WithTracer(prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true), prometheus.WithRegistry(mtl.Registry))),
+		tracer,
+	)
+	h.Use(hertztracing.ServerMiddleware(cfg))
 
 	registerMiddleware(h)
 
@@ -68,7 +77,8 @@ func main() {
 	h.GET("sign-up", func(ctx context.Context, c *app.RequestContext) {
 		c.HTML(consts.StatusOK, "sign-up", utils.H{"Title": "Sign Up"})
 	})
-	h.GET("/about", middleware.Auth(), func(ctx context.Context, c *app.RequestContext) {
+	h.GET("/about", func(ctx context.Context, c *app.RequestContext) {
+		hlog.CtxInfof(ctx, "E-commerce shop about page")
 		c.HTML(consts.StatusOK, "about", utils.H{"Title": "About"})
 	})
 
@@ -80,9 +90,15 @@ func registerMiddleware(h *server.Hertz) {
 	h.Use(sessions.New("E-commerce", store))
 
 	// log
-	logger := hertzlogrus.NewLogger()
+	logger := hertzobslogrus.NewLogger(hertzobslogrus.WithLogger(hertzlogrus.NewLogger().Logger()))
 	hlog.SetLogger(logger)
 	hlog.SetLevel(conf.LogLevel())
+	var flushInterval time.Duration
+	if os.Getenv("GO_ENV") == "online" { // 生产环境每分钟刷新,测试环境每秒钟
+		flushInterval = time.Minute
+	} else {
+		flushInterval = time.Second
+	}
 	asyncWriter := &zapcore.BufferedWriteSyncer{
 		WS: zapcore.AddSync(&lumberjack.Logger{
 			Filename:   conf.GetConf().Hertz.LogFileName,
@@ -90,7 +106,7 @@ func registerMiddleware(h *server.Hertz) {
 			MaxBackups: conf.GetConf().Hertz.LogMaxBackups,
 			MaxAge:     conf.GetConf().Hertz.LogMaxAge,
 		}),
-		FlushInterval: time.Minute,
+		FlushInterval: flushInterval,
 	}
 	hlog.SetOutput(asyncWriter)
 	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {

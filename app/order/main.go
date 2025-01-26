@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/MyGoFor/E-commerce/app/order/biz/dal"
 	"github.com/MyGoFor/E-commerce/common/mtl"
 	"github.com/MyGoFor/E-commerce/common/serversuite"
@@ -25,6 +26,8 @@ var (
 func main() {
 	_ = godotenv.Load()
 	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
+	p := mtl.InitTracing(ServiceName)
+	defer p.Shutdown(context.Background())
 
 	dal.Init()
 
