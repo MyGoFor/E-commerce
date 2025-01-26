@@ -1,15 +1,11 @@
 package main
 
 import (
-	"github.com/MyGoFor/E-commerce/app/order/biz/dal"
-	"github.com/joho/godotenv"
-	consul "github.com/kitex-contrib/registry-consul"
-	"log"
 	"net"
 	"time"
 
-	"github.com/MyGoFor/E-commerce/app/order/conf"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
+	"github.com/MyGoFor/E-commerce/app/upgrade/conf"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/upgrade/upgradeservice"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -19,12 +15,9 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load()
-
-	dal.Init()
 	opts := kitexInit()
 
-	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
+	svr := upgradeservice.NewServer(new(UpgradeServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {
@@ -44,13 +37,6 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
-
-	// consul服务注册中心
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

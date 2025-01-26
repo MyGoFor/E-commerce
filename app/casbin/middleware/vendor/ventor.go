@@ -1,4 +1,4 @@
-package ventor
+package vendor
 
 import "github.com/casbin/casbin/v2"
 

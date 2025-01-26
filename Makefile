@@ -118,6 +118,18 @@ cwgo_kitex_server_checkout:
 	cwgo server --type RPC --idl ../../idl/checkout.proto --service checkout --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/checkout -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_upgrade
+cwgo_kitex_client_upgrade:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/upgrade.proto --service upgrade -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_upgrade
+cwgo_kitex_server_upgrade:
+	@cd app/upgrade && \
+	cwgo server --type RPC --idl ../../idl/upgrade.proto --service upgrade --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/upgrade -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"

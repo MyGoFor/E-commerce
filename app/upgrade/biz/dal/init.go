@@ -1,9 +1,9 @@
 package dal
 
 import (
-	"github.com/MyGoFor/E-commerce/app/cart/biz/dal/mysql"
-	"github.com/MyGoFor/E-commerce/app/cart/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/casbin/db"
+	"github.com/MyGoFor/E-commerce/app/upgrade/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/upgrade/biz/dal/redis"
 	"github.com/casbin/casbin/v2"
 )
 
