@@ -173,3 +173,32 @@ grafana:
 .PHONY: jaeger
 jaeger:
 	@open "http://localhost:16686/search"
+
+# make build-frontend v=v1.1.1
+.PHONY: build-frontend
+build-frontend:
+	sudo docker build -f ./deploy/Dockerfile.frontend -t frontend:${v} .
+
+# make build-svc v=v1.1.1 svc=product
+.PHONY: build-svc
+build-svc:
+	sudo docker build -f ./deploy/Dockerfile.svc -t ${svc}:${v} --build-arg SVC=${svc} .
+
+.PHONY: build-all
+build-all:
+	sudo docker build -f ./deploy/Dockerfile.frontend -t frontend:${v} .
+	sudo docker build -f ./deploy/Dockerfile.svc -t cart:${v} --build-arg SVC=cart .
+	sudo docker build -f ./deploy/Dockerfile.svc -t checkout:${v} --build-arg SVC=checkout .
+	sudo docker build -f ./deploy/Dockerfile.svc -t email:${v} --build-arg SVC=email .
+	sudo docker build -f ./deploy/Dockerfile.svc -t order:${v} --build-arg SVC=order .
+	sudo docker build -f ./deploy/Dockerfile.svc -t payment:${v} --build-arg SVC=payment .
+	sudo docker build -f ./deploy/Dockerfile.svc -t product:${v} --build-arg SVC=product .
+	sudo docker build -f ./deploy/Dockerfile.svc -t user:${v} --build-arg SVC=user .
+
+.PHONY: dockerfile-frontend
+dockerfile-frontend:
+	@sudo docker run -v ./app/frontend/conf:/opt/E-commerce/frontend/conf --network e-commerce_default --env-file ./app/frontend/.env -p 8080:8080 7fd2ba529bb5
+
+.PHONY: dockerfile-product
+dockerfile-product:
+	@sudo docker run -v ./app/product/conf:/opt/E-commerce/product/conf --network e-commerce_default --env-file ./app/product/.env 40dbbb3deba7

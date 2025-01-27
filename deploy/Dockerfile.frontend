@@ -1,0 +1,42 @@
+# 构建frontend
+# 基础镜像
+FROM golang:1.23 AS builder
+
+# 工作目录
+WORKDIR /usr/src/E-commerce
+
+# (中国大陆)设置代理
+ENV GOPROXY=https://goproxy.cn,direct
+
+# 复制mod到镜像
+COPY app/frontend/go.mod app/frontend/go.sum ./app/frontend/
+COPY rpc_gen rpc_gen
+COPY common common
+
+# 运行命令
+RUN cd app/frontend/ && go mod download && go mod verify
+
+# 拷贝所有代码
+COPY app/frontend/ app/frontend/
+
+# 构建二进制文件
+RUN cd app/frontend/ && CGO_ENABLED=0 go build -v -o /opt/E-commerce/frontend/server
+
+# 一个轻量级镜像
+FROM busybox
+# 复制前面所有构建好的结果
+COPY --from=builder /opt/E-commerce/frontend/server /opt/E-commerce/frontend/server
+
+# 拷贝静态目录
+COPY app/frontend/conf /opt/E-commerce/frontend/conf
+COPY app/frontend/static /opt/E-commerce/frontend/static
+COPY app/frontend/template /opt/E-commerce/frontend/template
+
+# 重新设置工作目录
+WORKDIR /opt/E-commerce/frontend/
+
+# 指定对外暴露的端口
+EXPOSE 8080
+
+# 应用启动的文件
+CMD ["./server"]
