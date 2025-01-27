@@ -10,6 +10,8 @@ use (
 	./app/product
 	./app/user
 	./common
+	./app/casbin
+	./app/upgrade
 	rpc_gen
 )
 
