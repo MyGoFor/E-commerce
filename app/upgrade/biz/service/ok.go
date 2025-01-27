@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"errors"
+	"github.com/MyGoFor/E-commerce/app/casbin/middleware/ven"
+	"github.com/MyGoFor/E-commerce/app/upgrade/biz/dal"
 	upgrade "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/upgrade"
 )
 
@@ -15,6 +18,9 @@ func NewOkService(ctx context.Context) *OkService {
 // Run create note info
 func (s *OkService) Run(req *upgrade.OkReq) (resp *upgrade.Empty, err error) {
 	// Finish your business logic.
-
-	return
+	b := ven.Check(dal.E, req.Email)
+	if !b {
+		return nil, errors.New("not vendor")
+	}
+	return &upgrade.Empty{}, nil
 }

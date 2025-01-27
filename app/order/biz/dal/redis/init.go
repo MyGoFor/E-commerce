@@ -2,9 +2,9 @@ package redis
 
 import (
 	"context"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/MyGoFor/E-commerce/app/order/conf"
-	
 )
 
 var (

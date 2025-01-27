@@ -6,6 +6,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadpter "github.com/casbin/gorm-adapter/v3"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -32,9 +33,10 @@ func Init() {
 }
 
 func CasbinInit() *casbin.CachedEnforcer {
+	_ = godotenv.Load("../.env")
 	Init()
 	a, _ := gormadpter.NewAdapterByDB(DB)
-	m, err := model.NewModelFromFile("./model.pml")
+	m, err := model.NewModelFromFile("../../pml/model.pml")
 	if err != nil {
 		log.Fatalln(err)
 	}

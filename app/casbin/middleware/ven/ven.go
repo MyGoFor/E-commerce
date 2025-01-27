@@ -1,9 +1,9 @@
-package vendor
+package ven
 
 import "github.com/casbin/casbin/v2"
 
-func Check(e *casbin.CachedEnforcer, sub, obj, act string) bool {
-	ok, _ := e.Enforce(sub, obj, act)
+func Check(e *casbin.CachedEnforcer, sub string) bool {
+	ok, _ := e.Enforce(sub, "vendor")
 	if ok {
 		return true
 	} else {

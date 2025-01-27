@@ -1,6 +1,10 @@
 package main
 
 import (
+	"github.com/MyGoFor/E-commerce/app/upgrade/biz/dal"
+	"github.com/joho/godotenv"
+	consul "github.com/kitex-contrib/registry-consul"
+	"log"
 	"net"
 	"time"
 
@@ -15,8 +19,9 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
 	opts := kitexInit()
-
+	dal.Init()
 	svr := upgradeservice.NewServer(new(UpgradeServiceImpl), opts...)
 
 	err := svr.Run()
@@ -37,6 +42,13 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
+
+	// consul服务注册中心
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()
