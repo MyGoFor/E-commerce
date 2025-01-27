@@ -14,7 +14,10 @@ import (
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/nats-io/nats.go"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"google.golang.org/protobuf/proto"
+	"log"
 	"strconv"
 )
 
@@ -119,6 +122,8 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		return
 	}
 
+	log.Println(req.Email)
+
 	// 消息生产者，checkout成功就发送消息
 	data, _ := proto.Marshal(&email.EmailReq{
 		From:        "from@example.com",
@@ -129,8 +134,8 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	})
 	msg := &nats.Msg{Subject: "email", Data: data, Header: make(nats.Header)}
 
-	//// otel inject
-	//otel.GetTextMapPropagator().Inject(s.ctx, propagation.HeaderCarrier(msg.Header))
+	// otel
+	otel.GetTextMapPropagator().Inject(s.ctx, propagation.HeaderCarrier(msg.Header))
 
 	_ = mq.Nc.PublishMsg(msg)
 

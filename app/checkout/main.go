@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/MyGoFor/E-commerce/app/checkout/infra/mq"
 	"github.com/MyGoFor/E-commerce/app/checkout/infra/rpc"
 	"github.com/MyGoFor/E-commerce/common/mtl"
@@ -27,6 +28,8 @@ func main() {
 	_ = godotenv.Load()
 
 	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
+	p := mtl.InitTracing(ServiceName)
+	defer p.Shutdown(context.Background())
 
 	rpc.InitClient()
 
