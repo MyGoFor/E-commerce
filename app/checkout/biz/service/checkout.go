@@ -27,6 +27,8 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 
 // Run create note info
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
+	//设置ctx以检查rpc通信权限
+	s.ctx = context.WithValue(s.ctx, "service_name", "checkout")
 	// Finish your business logic.
 	// get cart
 	if rpc.CartClient == nil || rpc.OrderClient == nil || rpc.ProductClient == nil || rpc.PaymentClient == nil {

@@ -1,0 +1,23 @@
+syntax="proto3";
+
+package upgrade;
+
+option go_package="/upgrade";
+
+service UpgradeService {
+  rpc Upgrade(UpgradeReq) returns (Empty) {} // 用户升级为商家
+  rpc Ok(OkReq) returns (Empty) {} // 验证是否是商家
+}
+
+message UpgradeReq {
+  string email = 1;
+  string certificate = 2; // 证书，假设一个string
+  string content = 3; // 商品内容
+}
+
+message Empty {
+}
+
+message OkReq {
+  string email = 1;
+}

@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/MyGoFor/E-commerce/app/casbin/middleware/rpc"
+	"github.com/MyGoFor/E-commerce/app/order/biz/dal"
 	"github.com/MyGoFor/E-commerce/app/order/biz/dal/mysql"
 	"github.com/MyGoFor/E-commerce/app/order/biz/model"
 	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
@@ -19,6 +21,11 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 
 // Run create note info
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
+	//检查调用方权限
+	err = rpc.Check(dal.E, s.ctx, "place_order", "write")
+	if err != nil {
+		return nil, err
+	}
 	// Finish your business logic.
 	if len(req.OrderItems) == 0 {
 		err = fmt.Errorf("OrderItems empty")
