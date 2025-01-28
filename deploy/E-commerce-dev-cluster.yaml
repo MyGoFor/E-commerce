@@ -1,0 +1,22 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: e-commerce-dev
+nodes:
+- role: control-plane
+  image: kindest/node:v1.30.0
+  extraMounts:
+  - hostPath: ./deploy/config
+    containerPath: /opt/E-commerce/deploy/config
+
+- role: worker
+  image: kindest/node:v1.30.0
+  extraMounts:
+  - hostPath: ./deploy/config
+    containerPath: /opt/E-commerce/deploy/config
+
+# image for China: registry.cn-hangzhou.aliyuncs.com/kindest/node:v1.30.0
+- role: worker
+  image: kindest/node:v1.30.0
+  extraMounts:
+  - hostPath: ./deploy/config
+    containerPath: /opt/E-commerce/deploy/config
