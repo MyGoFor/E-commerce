@@ -11,6 +11,8 @@ use (
 	./app/user
 	./app/upgrade
 	./common
+	./app/casbin
+	./app/upgrade
 	rpc_gen
 )
 
