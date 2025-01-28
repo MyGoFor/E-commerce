@@ -29,11 +29,14 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	_ = DB.AutoMigrate(&gormadpter.CasbinRule{})
+	err = DB.AutoMigrate(&gormadpter.CasbinRule{})
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func CasbinInit() *casbin.CachedEnforcer {
-	_ = godotenv.Load("../.env")
+	_ = godotenv.Load("./.env")
 	Init()
 	a, _ := gormadpter.NewAdapterByDB(DB)
 	m, err := model.NewModelFromFile("../../pml/model.pml")
