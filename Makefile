@@ -201,4 +201,4 @@ dockerfile-frontend:
 
 .PHONY: dockerfile-product
 dockerfile-product:
-	@sudo docker run -v ./app/product/conf:/opt/E-commerce/product/conf --network e-commerce_default --env-file ./app/product/.env 40dbbb3deba7
+	@sudo docker run -v ./app/product/conf:/opt/E-commerce/product/conf --network e-commerce_default --env-file ./app/product/.env 915e029bed10

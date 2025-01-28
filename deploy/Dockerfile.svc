@@ -17,6 +17,7 @@ COPY rpc_gen rpc_gen
 COPY common common
 
 # 运行命令
+RUN cd common && go mod download && go mod verify
 RUN cd app/${SVC}/ && go mod download && go mod verify
 
 # 拷贝所有代码

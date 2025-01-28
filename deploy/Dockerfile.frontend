@@ -20,6 +20,7 @@ RUN cd app/frontend/ && go mod download && go mod verify
 COPY app/frontend/ app/frontend/
 
 # 构建二进制文件
+RUN cd common && go mod download && go mod verify
 RUN cd app/frontend/ && CGO_ENABLED=0 go build -v -o /opt/E-commerce/frontend/server
 
 # 一个轻量级镜像
