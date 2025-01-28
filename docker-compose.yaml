@@ -67,155 +67,153 @@ services:
       - ./app/frontend/log:/logs/frontend
     command: -config.file=/etc/promtail/config.yml
 
-#  frontend:
-##    image: e-commerce-frontend:latest
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.frontend
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - SESSION_SECRET=041212
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/frontend/conf/dev:/opt/E-commerce/frontend/conf/dev
-#
-#  product:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=product
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/product/conf/dev:/opt/E-commerce/product/conf/dev
-#
-#  user:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=user
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/user/conf/dev:/opt/E-commerce/user/conf/dev
-#
-#  cart:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=cart
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/cart/conf/dev:/opt/E-commerce/cart/conf/dev
-#
-#  order:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=order
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/order/conf/dev:/opt/E-commerce/order/conf/dev
-#
-#  payment:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=payment
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/payment/conf/dev:/opt/E-commerce/payment/conf/dev
-#
-#  checkout:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=checkout
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/checkout/conf/dev:/opt/E-commerce/checkout/conf/dev
-#
-#  email:
-#    build:
-#      context: .
-#      dockerfile: ./deploy/Dockerfile.svc
-#      args:
-#        - SVC=email
-#    environment:
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
-#      - OTEL_EXPORTER_OTLP_INSECURE=true
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=041212
-#      - MYSQL_HOST=154.37.220.49
-#      - GO_ENV=dev
-#    depends_on:
-#      consul:
-#        condition: service_started
-#    volumes:
-#      - ./app/email/conf/dev:/opt/E-commerce/email/conf/dev
+  frontend:
+#    image: e-commerce-frontend:latest
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - SESSION_SECRET=041212
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/frontend/conf/dev:/opt/E-commerce/frontend/conf/dev
 
-# 启动之后正常功能没问题，但是链路追踪没有数据
+  product:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=product
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/product/conf/dev:/opt/E-commerce/product/conf/dev
+
+  user:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=user
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/user/conf/dev:/opt/E-commerce/user/conf/dev
+
+  cart:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=cart
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/cart/conf/dev:/opt/E-commerce/cart/conf/dev
+
+  order:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=order
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/order/conf/dev:/opt/E-commerce/order/conf/dev
+
+  payment:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=payment
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/payment/conf/dev:/opt/E-commerce/payment/conf/dev
+
+  checkout:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=checkout
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/checkout/conf/dev:/opt/E-commerce/checkout/conf/dev
+
+  email:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.svc
+      args:
+        - SVC=email
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger-all-in-one:4317
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=041212
+      - MYSQL_HOST=154.37.220.49
+      - GO_ENV=dev
+    depends_on:
+      consul:
+        condition: service_started
+    volumes:
+      - ./app/email/conf/dev:/opt/E-commerce/email/conf/dev
