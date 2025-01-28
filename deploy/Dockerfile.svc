@@ -1,0 +1,40 @@
+# 构建${SVC}
+# 基础镜像
+FROM golang:1.23 AS builder
+
+# 接受一个服务名的参数
+ARG SVC
+
+# 工作目录
+WORKDIR /usr/src/E-commerce
+
+# (中国大陆)设置代理
+ENV GOPROXY=https://goproxy.cn,direct
+
+# 复制mod到镜像
+COPY app/${SVC}/go.mod app/${SVC}/go.sum ./app/${SVC}/
+COPY rpc_gen rpc_gen
+COPY common common
+
+# 运行命令
+RUN cd common && go mod download && go mod verify
+RUN cd app/${SVC}/ && go mod download && go mod verify
+
+# 拷贝所有代码
+COPY app/${SVC}/ app/${SVC}/
+
+# 构建二进制文件
+RUN cd app/${SVC}/ && CGO_ENABLED=0 go build -v -o /opt/E-commerce/${SVC}/server
+
+FROM busybox
+ARG SVC
+COPY --from=builder /opt/E-commerce/${SVC}/server /opt/E-commerce/${SVC}/server
+
+# 拷贝静态目录
+COPY app/${SVC}/conf /opt/E-commerce/${SVC}/conf
+
+# 重新设置工作目录
+WORKDIR /opt/E-commerce/${SVC}/
+
+# 应用启动的文件
+CMD ["./server"]
