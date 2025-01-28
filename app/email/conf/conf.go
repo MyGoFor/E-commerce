@@ -23,6 +23,11 @@ type Config struct {
 	MySQL    MySQL    `yaml:"mysql"`
 	Redis    Redis    `yaml:"redis"`
 	Registry Registry `yaml:"registry"`
+	Nats     Nats     `yaml:"nats"`
+}
+
+type Nats struct {
+	Address string `yaml:"address"`
 }
 
 type MySQL struct {

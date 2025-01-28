@@ -44,7 +44,7 @@ cwgo_hertz_order_page:
 
 .PHONY: docker
 docker:
-	@sudo docker compose up -d
+	@docker compose up -d
 
 .PHONY: cwgo_kitex_client_user
 cwgo_kitex_client_user:
@@ -173,3 +173,25 @@ grafana:
 .PHONY: jaeger
 jaeger:
 	@open "http://localhost:16686/search"
+
+# make build-frontend v=v1.1.1
+.PHONY: build-frontend
+build-frontend:
+	docker build -f ./deploy/Dockerfile.frontend -t frontend:${v} .
+
+# make build-svc v=v1.1.1 svc=product
+.PHONY: build-svc
+build-svc:
+	docker build -f ./deploy/Dockerfile.svc -t ${svc}:${v} --build-arg SVC=${svc} .
+
+.PHONY: build-all
+build-all:
+	docker build -f ./deploy/Dockerfile.frontend -t frontend:${v} .
+	docker build -f ./deploy/Dockerfile.svc -t cart:${v} --build-arg SVC=cart .
+	docker build -f ./deploy/Dockerfile.svc -t checkout:${v} --build-arg SVC=checkout .
+	docker build -f ./deploy/Dockerfile.svc -t email:${v} --build-arg SVC=email .
+	docker build -f ./deploy/Dockerfile.svc -t order:${v} --build-arg SVC=order .
+	docker build -f ./deploy/Dockerfile.svc -t payment:${v} --build-arg SVC=payment .
+	docker build -f ./deploy/Dockerfile.svc -t product:${v} --build-arg SVC=product .
+	docker build -f ./deploy/Dockerfile.svc -t user:${v} --build-arg SVC=user .
+

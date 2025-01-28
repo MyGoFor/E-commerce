@@ -1,6 +1,9 @@
 package mq
 
-import "github.com/nats-io/nats.go"
+import (
+	"github.com/MyGoFor/E-commerce/app/email/conf"
+	"github.com/nats-io/nats.go"
+)
 
 var (
 	Nc  *nats.Conn
@@ -8,7 +11,7 @@ var (
 )
 
 func Init() {
-	Nc, err = nats.Connect(nats.DefaultURL)
+	Nc, err = nats.Connect(conf.GetConf().Nats.Address)
 	if err != nil {
 		panic(err)
 	}
