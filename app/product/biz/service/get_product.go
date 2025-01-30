@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/product/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/product/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/product/module"
 	product "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 )
@@ -16,9 +17,7 @@ func NewGetProductService(ctx context.Context) *GetProductService {
 
 // Run create note info
 func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetProductResp, err error) {
-	// Finish your business logic.
-	p := module.Product{}
-	err = mysql.DB.Where("id = ?", req.Id).First(&p).Error
+	p, err := module.NewCachedProductQuery(module.NewProductQuery(s.ctx, mysql.DB), redis.RedisClient).GetByID(req.Id)
 	if err != nil {
 		return nil, err
 	}
