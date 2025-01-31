@@ -21,4 +21,19 @@
 | kind                                                                         | docker内部k8s集群部署             |
 
 ## 启动命令
-` `
+
+1. 本地启动</br>
+`make docker` </br>
+`make user_run` </br>
+`make product_run` </br>
+`make cart_run` </br>
+`make order_run` </br>
+`make payment_run` </br>
+`make checkout_run` </br>
+`make email_run` </br>
+`make frontend_run` </br>
+`make web` </br>
+
+2. docker容器部署后启动
+
+3. kind部署k8s集群后启动

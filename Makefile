@@ -195,3 +195,6 @@ build-all:
 	docker build -f ./deploy/Dockerfile.svc -t product:${v} --build-arg SVC=product .
 	docker build -f ./deploy/Dockerfile.svc -t user:${v} --build-arg SVC=user .
 
+.PHONY: web
+web:
+	@open "http://localhost:8080"
