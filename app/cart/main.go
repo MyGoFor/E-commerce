@@ -1,36 +1,39 @@
 package main
 
 import (
+	"context"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/dal"
-	"github.com/MyGoFor/E-commerce/app/cart/rpc"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
+	"github.com/MyGoFor/E-commerce/app/cart/infra/rpc"
+	"github.com/MyGoFor/E-commerce/common/mtl"
+	"github.com/MyGoFor/E-commerce/common/serversuite"
 	"github.com/joho/godotenv"
-	consul "github.com/kitex-contrib/registry-consul"
-	"gorm.io/gorm"
-	"log"
 	"net"
 	"time"
 
 	"github.com/MyGoFor/E-commerce/app/cart/conf"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-type Cart struct {
-	gorm.Model
-	UserID    uint32 `gorm:"type:int(11);not null;index;"`
-	ProductID uint32 `gorm:"type:int(11);not null;"`
-	Qty       uint32 `gorm:"type:int(11);not null;"`
-}
+var (
+	ServiceName  = conf.GetConf().Kitex.Service
+	RegistryAddr = conf.GetConf().Registry.RegistryAddress[0]
+)
 
 func main() {
 	_ = godotenv.Load()
-	rpc.Init()
+
+	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
+	p := mtl.InitTracing(ServiceName)
+	defer p.Shutdown(context.Background())
+
+	rpc.InitClient()
 	dal.Init()
+
 	opts := kitexInit()
 
 	svr := cartservice.NewServer(new(CartServiceImpl), opts...)
@@ -47,17 +50,10 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr))
-
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// service info
-	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-		ServiceName: conf.GetConf().Kitex.Service,
-	}), server.WithRegistry(r))
+	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(serversuite.CommonServerSuite{
+		CurrentServiceName: ServiceName,
+		RegistryAddress:    RegistryAddr,
+	}))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

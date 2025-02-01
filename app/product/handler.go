@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	product "github.com/MyGoFor/E-commerce/rpc_gen/product"
 	"github.com/MyGoFor/E-commerce/app/product/biz/service"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 )
 
 // ProductCatalogServiceImpl implements the last service interface defined in the IDL.
@@ -26,6 +26,13 @@ func (s *ProductCatalogServiceImpl) GetProduct(ctx context.Context, req *product
 // SearchProducts implements the ProductCatalogServiceImpl interface.
 func (s *ProductCatalogServiceImpl) SearchProducts(ctx context.Context, req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
 	resp, err = service.NewSearchProductsService(ctx).Run(req)
+
+	return resp, err
+}
+
+// AddProduct implements the ProductCatalogServiceImpl interface.
+func (s *ProductCatalogServiceImpl) AddProduct(ctx context.Context, req *product.AddProductReq) (resp *product.AddProductResp, err error) {
+	resp, err = service.NewAddProductService(ctx).Run(req)
 
 	return resp, err
 }

@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-
 	cart "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/cart"
+	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
+	rpccart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -17,10 +18,13 @@ func NewAddCartItemService(Context context.Context, RequestContext *app.RequestC
 }
 
 func (h *AddCartItemService) Run(req *cart.AddCartReq) (resp *cart.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
+	_, err = rpc.CartClient.AddItem(h.Context, &rpccart.AddItemReq{
+		//UserId: frontendutils.GetUserIdFromCtx(h.Context),
+		UserId: uint32(h.Context.Value("user_id").(int32)),
+		Item: &rpccart.CartItem{
+			ProductId: req.ProductId,
+			Quantity:  req.ProductNum,
+		},
+	})
 	return
 }

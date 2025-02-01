@@ -1,6 +1,7 @@
 kitex:
   service: "user"
   address: ":8888"
+  metrics_port: ":9998"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -17,7 +18,7 @@ mysql:
   dsn: "%s:%s@tcp(%s:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
-  address: "127.0.0.1:6379"
+  address: "154.37.220.49:6379"
   username: ""
   password: ""
   db: 0

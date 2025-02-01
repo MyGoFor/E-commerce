@@ -1,6 +1,7 @@
 hertz:
   service: "frontend"
-  address: ":8084"
+  address: ":8080"
+  matrices_port: ":8090"
   enable_pprof: true
   enable_gzip: true
   enable_access_log: true
@@ -15,7 +16,7 @@ mysql:
   dsn: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
-  address: "127.0.0.1:6379"
+  address: "154.37.220.49:6379"
   username: ""
   password: ""
   db: 0

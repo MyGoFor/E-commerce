@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
+	product "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"testing"
-	product "github.com/MyGoFor/E-commerce/rpc_gen/product"
 )
 
 func TestSearchProducts_Run(t *testing.T) {
