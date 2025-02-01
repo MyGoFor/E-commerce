@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/MyGoFor/E-commerce/app/order/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/order/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/order/biz/model"
 	order "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -23,7 +24,8 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 		err = fmt.Errorf("user_id or order_id can not be empty")
 		return
 	}
-	_, err = model.GetOrder(mysql.DB, s.ctx, req.UserId, req.OrderId)
+	_, err = model.NewCachedOrderQuery(model.NewOrderQuery(s.ctx, mysql.DB), redis.RedisClient).
+		GetOrder(req.UserId, req.OrderId)
 	if err != nil {
 		klog.Errorf("model.ListOrder.err:%v", err)
 		return nil, err
