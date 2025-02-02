@@ -58,3 +58,4 @@ jobs:
 
       - name: Start frontend_run
         run: nohup make frontend_run
+
