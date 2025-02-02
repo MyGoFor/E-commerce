@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - test
   pull_request:
     branches:
       - main
+      - test
 
 #env:
 #  HOST: 139.159.145.82  # 部署的服务器地址
