@@ -19,7 +19,7 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latestnohup
 
     steps:
       - name: Checkout code
@@ -36,25 +36,25 @@ jobs:
         run: make docker
 
       - name: Start user_run
-        run: make user_run
+        run: nohup make user_run # 后台运行
 
       - name: Start product_run
-        run: make product_run
+        run: nohup make product_run
 
       - name: Start cart_run
-        run: make cart_run
+        run: nohup make cart_run
 
       - name: Start order_run
-        run: make order_run
+        run: nohup make order_run
 
       - name: Start payment_run
-        run: make payment_run
+        run: nohup make payment_run
 
       - name: Start checkout_run
-        run: make checkout_run
+        run: nohup make checkout_run
 
       - name: Start email_run
-        run: make email_run
+        run: nohup make email_run
 
       - name: Start frontend_run
-        run: make frontend_run
+        run: nohup make frontend_run
