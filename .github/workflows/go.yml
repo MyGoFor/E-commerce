@@ -1,0 +1,62 @@
+name: E-commerce CI/CD
+
+on:
+  push:
+    branches:
+      - main  # 或者你选择的分支
+      - test
+  pull_request:
+    branches:
+      - main  # 如果是PR，也可以触发此工作流
+      - test
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 作为环境
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2  # 检出代码
+
+      # Step 2: Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.23.4'  # Go版本根据你的需求设置
+
+      # Step 3: Cache Go modules
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Step 4: Run go mod tidy for all modules
+      - name: Run go mod tidy
+        run: |
+#           为每个子模块执行 go mod tidy
+          for dir in $(find . -name "go.mod" -exec dirname {} \;); do
+          echo "Running go mod tidy in $dir"
+          cd $dir && go mod tidy
+          done
+
+      # Step 5: Build Docker images for each service
+      - name: Build Docker images
+        run: |
+          make docker
+
+      # Step 6: Run all services in Docker containers
+      - name: Start all services
+        run: |
+          make user_run
+          make product_run
+          make cart_run
+          make order_run
+          make payment_run
+          make checkout_run
+          make email_run
+          make frontend_run
+          
