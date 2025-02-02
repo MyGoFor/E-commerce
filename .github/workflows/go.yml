@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - test
+      - hch
   pull_request:
     branches:
       - main
