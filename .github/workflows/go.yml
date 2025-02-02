@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - test
+      - hch
   pull_request:
     branches:
       - main
@@ -34,5 +35,35 @@ jobs:
       - name: Start docker
         run: make docker
 
-      - name: Start Server
-        run: make user_run && make product_run && make cart_run && make order_run && make payment_run && make checkout_run && make email_run && make frontend_run
+      - name: Start User Service
+        run: |
+          nohup make user_run &
+
+      - name: Start Product Service
+        run: |
+          nohup make product_run &
+
+      - name: Start Cart Service
+        run: |
+          nohup make cart_run &
+
+      - name: Start Order Service
+        run: |
+          nohup make order_run &
+
+      - name: Start Payment Service
+        run: |
+          nohup make payment_run &
+
+      - name: Start Checkout Service
+        run: |
+          nohup make checkout_run &
+
+      - name: Start Email Service
+        run: |
+          nohup make email_run &
+
+      - name: Start Frontend Service
+        run: |
+          nohup make frontend_run &
+
