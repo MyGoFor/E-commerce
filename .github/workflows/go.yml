@@ -34,5 +34,26 @@ jobs:
       - name: Start docker
         run: make docker
 
-      - name: Start Server
-        run: make user_run && make product_run && make cart_run && make order_run && make payment_run && make checkout_run && make email_run && make frontend_run
+      - name: Start user_run
+        run: make user_run
+
+      - name: Start product_run
+        run: make product_run
+
+      - name: Start cart_run
+        run: make cart_run
+
+      - name: Start order_run
+        run: make order_run
+
+      - name: Start payment_run
+        run: make payment_run
+
+      - name: Start checkout_run
+        run: make checkout_run
+
+      - name: Start email_run
+        run: make email_run
+
+      - name: Start frontend_run
+        run: make frontend_run
