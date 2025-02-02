@@ -19,7 +19,7 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latestnohup
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
