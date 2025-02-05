@@ -15,24 +15,18 @@
 package rpc
 
 import (
-	"github.com/MyGoFor/E-commerce/app/checkout/conf"
+	"github.com/MyGoFor/E-commerce/app/eino/conf"
 	"github.com/MyGoFor/E-commerce/common/clientsuite"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment/paymentservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/kitex/pkg/transmeta"
-	"github.com/cloudwego/kitex/transport"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
 )
 
 var (
-	CartClient    cartservice.Client
 	ProductClient productcatalogservice.Client
-	PaymentClient paymentservice.Client
 	OrderClient   orderservice.Client
 	once          sync.Once
 	err           error
@@ -42,9 +36,7 @@ var (
 
 func InitClient() {
 	once.Do(func() {
-		initCartClient()
 		initProductClient()
-		initPaymentClient()
 		initOrderClient()
 	})
 }
@@ -62,44 +54,12 @@ func initProductClient() {
 	}
 }
 
-func initCartClient() {
-	opts := []client.Option{
-		client.WithSuite(clientsuite.CommonClientSuite{
-			CurrentServiceName: ServiceName,
-			RegistryAddress:    RegistryAddr,
-		}),
-		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-		client.WithTransportProtocol(transport.GRPC),
-	}
-	CartClient, err = cartservice.NewClient("cart", opts...)
-	if err != nil {
-		hlog.Fatal(err)
-	}
-}
-
-func initPaymentClient() {
-	opts := []client.Option{
-		client.WithSuite(clientsuite.CommonClientSuite{
-			CurrentServiceName: ServiceName,
-			RegistryAddress:    RegistryAddr,
-		}),
-		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-		client.WithTransportProtocol(transport.GRPC),
-	}
-	PaymentClient, err = paymentservice.NewClient("payment", opts...)
-	if err != nil {
-		hlog.Fatal(err)
-	}
-}
-
 func initOrderClient() {
 	opts := []client.Option{
 		client.WithSuite(clientsuite.CommonClientSuite{
 			CurrentServiceName: ServiceName,
 			RegistryAddress:    RegistryAddr,
 		}),
-		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-		client.WithTransportProtocol(transport.GRPC),
 	}
 	OrderClient, err = orderservice.NewClient("order", opts...)
 	if err != nil {

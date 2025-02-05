@@ -7,7 +7,7 @@ import (
 	"github.com/casbin/casbin/v2"
 )
 
-var E *casbin.CachedEnforcer
+var E *casbin.Enforcer
 
 func Init() {
 	E = db.CasbinInit()

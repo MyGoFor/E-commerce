@@ -2,16 +2,18 @@ package main
 
 import (
 	"context"
-	"github.com/MyGoFor/E-commerce/app/order/biz/dal"
+	"github.com/MyGoFor/E-commerce/app/eino/biz/dal"
+	"github.com/MyGoFor/E-commerce/app/eino/infra/rpc"
 	"github.com/MyGoFor/E-commerce/common/mtl"
 	"github.com/MyGoFor/E-commerce/common/serversuite"
 	"github.com/joho/godotenv"
 	"net"
 	"time"
 
-	"github.com/MyGoFor/E-commerce/app/order/conf"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
+	"github.com/MyGoFor/E-commerce/app/eino/conf"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/eino/einoservice"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"go.uber.org/zap/zapcore"
@@ -28,11 +30,11 @@ func main() {
 	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
 	p := mtl.InitTracing(ServiceName)
 	defer p.Shutdown(context.Background())
-
 	dal.Init()
+	rpc.InitClient()
 	opts := kitexInit()
 
-	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
+	svr := einoservice.NewServer(new(EinoServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {
@@ -49,11 +51,12 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(serversuite.CommonServerSuite{
 		CurrentServiceName: ServiceName,
 		RegistryAddress:    RegistryAddr,
-	}),
-	)
+	}))
 
-	//metainfo
-	//opts = append(opts, server.WithMetaHandler(transmeta.ClientTTHeaderHandler), server.WithTrans)
+	// service info
+	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
+		ServiceName: conf.GetConf().Kitex.Service,
+	}))
 
 	// klog
 	logger := kitexlogrus.NewLogger()
