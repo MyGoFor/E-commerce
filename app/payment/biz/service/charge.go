@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/casbin/middleware/rpc"
+	"github.com/MyGoFor/E-commerce/app/payment/biz/dal"
 	"github.com/MyGoFor/E-commerce/app/payment/biz/dal/mysql"
 	"github.com/MyGoFor/E-commerce/app/payment/biz/model"
 	payment "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment"
@@ -21,6 +23,11 @@ func NewChargeService(ctx context.Context) *ChargeService {
 
 // Run create note info
 func (s *ChargeService) Run(req *payment.ChargeReq) (resp *payment.ChargeResp, err error) {
+	//检查调用权限
+	err = rpc.Check(dal.E, s.ctx, "charge", "write")
+	if err != nil {
+		return nil, err
+	}
 	// Finish your business logic.
 	card := creditcard.Card{
 		Number: req.CreditCard.CreditCardNumber,

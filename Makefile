@@ -130,6 +130,18 @@ cwgo_kitex_server_email:
 	cwgo server --type RPC --idl ../../idl/email.proto --service email --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/email -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_eino
+cwgo_kitex_client_eino:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/eino.proto --service eino -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_eino
+cwgo_kitex_server_eino:
+	@cd app/eino && \
+	cwgo server --type RPC --idl ../../idl/eino.proto --service eino --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/eino -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"

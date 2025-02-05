@@ -12,6 +12,7 @@ import (
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
+	"github.com/bytedance/gopkg/cloud/metainfo"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/nats-io/nats.go"
 	"go.opentelemetry.io/otel"
@@ -30,6 +31,9 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 
 // Run create note info
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
+	//设置ctx以检查rpc通信权限
+	s.ctx = context.Background()
+	s.ctx = metainfo.WithValue(s.ctx, "SERVICE_NAME", "checkout")
 	// Finish your business logic.
 	// get cart
 	if rpc.CartClient == nil || rpc.OrderClient == nil || rpc.ProductClient == nil || rpc.PaymentClient == nil {

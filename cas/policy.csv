@@ -1,0 +1,6 @@
+g,ai,checkout
+g,checkout,checkout
+p,checkout,charge,use
+p,checkout,empty_cart,use
+p,checkout,mark_order_paid,use
+p,checkout,place_order,use

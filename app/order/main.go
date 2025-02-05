@@ -30,7 +30,6 @@ func main() {
 	defer p.Shutdown(context.Background())
 
 	dal.Init()
-
 	opts := kitexInit()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
@@ -50,7 +49,11 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(serversuite.CommonServerSuite{
 		CurrentServiceName: ServiceName,
 		RegistryAddress:    RegistryAddr,
-	}))
+	}),
+	)
+
+	//metainfo
+	//opts = append(opts, server.WithMetaHandler(transmeta.ClientTTHeaderHandler), server.WithTrans)
 
 	// klog
 	logger := kitexlogrus.NewLogger()
