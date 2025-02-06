@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	myRedis "github.com/MyGoFor/E-commerce/app/cart/biz/dal/redis"
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -100,6 +101,7 @@ func NewCachedCartQuery(cq CartQuery, cacheClient *redis.Client) CachedCartQuery
 	}
 }
 
+// 添加商品的时候应该更新缓存
 func AddCart(db *gorm.DB, ctx context.Context, c *Cart) error {
 	var find Cart
 	err := db.WithContext(ctx).Model(&Cart{}).Where(&Cart{UserId: c.UserId, ProductId: c.ProductId}).First(&find).Error
@@ -111,12 +113,30 @@ func AddCart(db *gorm.DB, ctx context.Context, c *Cart) error {
 	} else {
 		err = db.WithContext(ctx).Model(&Cart{}).Create(c).Error
 	}
+
+	if err == nil {
+		// 更新缓存
+		cachedKey := fmt.Sprintf("E-commerce_shop_cart_by_userId_%d", c.UserId)
+		var cartList []*Cart
+		db.WithContext(ctx).Model(&Cart{}).Where("user_id = ?", c.UserId).Find(&cartList)
+		encoded, _ := json.Marshal(cartList)
+		myRedis.RedisClient.Set(ctx, cachedKey, encoded, 12*time.Hour)
+	}
+
 	return err
 }
 
+// 还要清理缓存
 func EmptyCart(db *gorm.DB, ctx context.Context, userId uint32) error {
 	if userId == 0 {
 		return errors.New("user_is is required")
 	}
-	return db.WithContext(ctx).Delete(&Cart{}, "user_id = ?", userId).Error
+
+	err := db.WithContext(ctx).Delete(&Cart{}, "user_id = ?", userId).Error
+	if err == nil {
+		// 清理缓存
+		cachedKey := fmt.Sprintf("E-commerce_shop_cart_by_userId_%d", userId)
+		myRedis.RedisClient.Del(ctx, cachedKey)
+	}
+	return err
 }
