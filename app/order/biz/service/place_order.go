@@ -19,6 +19,7 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 
 // Run create note info
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
+
 	// Finish your business logic.
 	if len(req.OrderItems) == 0 {
 		err = fmt.Errorf("OrderItems empty")

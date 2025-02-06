@@ -19,6 +19,7 @@
 | grafana                                                                      | 数据面板                        |
 | logrus/GLP                                                                   | 日志系统                        |
 | kind                                                                         | docker内部k8s集群部署             |
+| 熔断和fallback                                                                         | for product                 |
 
 ## 启动命令
 

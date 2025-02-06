@@ -10,7 +10,10 @@ use (
 	./app/product
 	./app/user
 	./common
+	./app/casbin
+	./app/upgrade
 	rpc_gen
+	app/eino
 )
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0

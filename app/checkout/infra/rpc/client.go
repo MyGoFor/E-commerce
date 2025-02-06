@@ -22,6 +22,8 @@ import (
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/payment/paymentservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/transmeta"
+	"github.com/cloudwego/kitex/transport"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
@@ -66,6 +68,8 @@ func initCartClient() {
 			CurrentServiceName: ServiceName,
 			RegistryAddress:    RegistryAddr,
 		}),
+		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
+		client.WithTransportProtocol(transport.GRPC),
 	}
 	CartClient, err = cartservice.NewClient("cart", opts...)
 	if err != nil {
@@ -79,6 +83,8 @@ func initPaymentClient() {
 			CurrentServiceName: ServiceName,
 			RegistryAddress:    RegistryAddr,
 		}),
+		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
+		client.WithTransportProtocol(transport.GRPC),
 	}
 	PaymentClient, err = paymentservice.NewClient("payment", opts...)
 	if err != nil {
@@ -92,6 +98,8 @@ func initOrderClient() {
 			CurrentServiceName: ServiceName,
 			RegistryAddress:    RegistryAddr,
 		}),
+		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
+		client.WithTransportProtocol(transport.GRPC),
 	}
 	OrderClient, err = orderservice.NewClient("order", opts...)
 	if err != nil {
