@@ -16,7 +16,11 @@ package model
 
 import (
 	"context"
+	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/json"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+	"time"
 )
 
 type User struct {
@@ -29,8 +33,66 @@ func (u User) TableName() string {
 	return "user"
 }
 
-func GetByEmail(db *gorm.DB, ctx context.Context, email string) (user *User, err error) {
-	err = db.WithContext(ctx).Model(&User{}).Where(&User{Email: email}).First(&user).Error
+type UserQuery struct {
+	ctx context.Context
+	db  *gorm.DB
+}
+
+func NewUserQuery(ctx context.Context, db *gorm.DB) UserQuery {
+	return UserQuery{
+		ctx: ctx,
+		db:  db,
+	}
+}
+
+func (u UserQuery) GetByEmail(email string) (user *User, err error) {
+	err = u.db.WithContext(u.ctx).Model(&User{}).Where(&User{Email: email}).First(&user).Error
+	return
+}
+
+type CacheUserQuery struct {
+	userQuery   UserQuery
+	cacheClient *redis.Client
+	prefix      string
+}
+
+func NewCacheUserQuery(userQuery UserQuery, cacheClient *redis.Client) CacheUserQuery {
+	return CacheUserQuery{
+		userQuery:   userQuery,
+		cacheClient: cacheClient,
+	}
+}
+
+func (c CacheUserQuery) GetByEmail(email string) (user *User, err error) {
+	cacheKey := fmt.Sprintf("%s_%s_%s", c.prefix, "user_by_email", email)
+	cacheResult := c.cacheClient.Get(c.userQuery.ctx, cacheKey)
+	err = func() error {
+		err1 := cacheResult.Err()
+		if err1 != nil {
+			return err1
+		}
+		cachedResultByte, err2 := cacheResult.Bytes()
+		if err2 != nil {
+			return err2
+		}
+		err3 := json.Unmarshal(cachedResultByte, &user)
+		if err3 != nil {
+			return err3
+		}
+		return nil
+	}()
+
+	if err != nil {
+		user, err = c.userQuery.GetByEmail(email)
+		if err != nil {
+			return &User{}, err
+		}
+		encoded, err := json.Marshal(user)
+		if err != nil {
+			return user, nil
+		}
+		_ = c.cacheClient.Set(c.userQuery.ctx, cacheKey, encoded, 12*time.Hour)
+	}
 	return
 }
 
