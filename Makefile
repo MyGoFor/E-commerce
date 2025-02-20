@@ -130,6 +130,18 @@ cwgo_kitex_server_email:
 	cwgo server --type RPC --idl ../../idl/email.proto --service email --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/email -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_casbin
+cwgo_kitex_client_casbin:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/casbin.proto --service casbin -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_casbin
+cwgo_kitex_server_casbin:
+	@cd app/casbin && \
+	cwgo server --type RPC --idl ../../idl/casbin.proto --service casbin --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/casbin -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
