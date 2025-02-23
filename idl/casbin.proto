@@ -18,5 +18,7 @@ message Empty {
 }
 
 message OkReq {
-  string email = 1;
+  string sub = 1;
+  string obj = 2;
+  string act = 3;
 }

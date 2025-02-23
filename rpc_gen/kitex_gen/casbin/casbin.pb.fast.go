@@ -67,6 +67,16 @@ func (x *OkReq) FastRead(buf []byte, _type int8, number int32) (offset int, err 
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 3:
+		offset, err = x.fastReadField3(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -81,7 +91,17 @@ ReadFieldError:
 }
 
 func (x *OkReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Email, offset, err = fastpb.ReadString(buf, _type)
+	x.Sub, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *OkReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
+	x.Obj, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *OkReq) fastReadField3(buf []byte, _type int8) (offset int, err error) {
+	x.Act, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
 
@@ -122,14 +142,32 @@ func (x *OkReq) FastWrite(buf []byte) (offset int) {
 		return offset
 	}
 	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
+	offset += x.fastWriteField3(buf[offset:])
 	return offset
 }
 
 func (x *OkReq) fastWriteField1(buf []byte) (offset int) {
-	if x.Email == "" {
+	if x.Sub == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.GetEmail())
+	offset += fastpb.WriteString(buf[offset:], 1, x.GetSub())
+	return offset
+}
+
+func (x *OkReq) fastWriteField2(buf []byte) (offset int) {
+	if x.Obj == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetObj())
+	return offset
+}
+
+func (x *OkReq) fastWriteField3(buf []byte) (offset int) {
+	if x.Act == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 3, x.GetAct())
 	return offset
 }
 
@@ -170,14 +208,32 @@ func (x *OkReq) Size() (n int) {
 		return n
 	}
 	n += x.sizeField1()
+	n += x.sizeField2()
+	n += x.sizeField3()
 	return n
 }
 
 func (x *OkReq) sizeField1() (n int) {
-	if x.Email == "" {
+	if x.Sub == "" {
 		return n
 	}
-	n += fastpb.SizeString(1, x.GetEmail())
+	n += fastpb.SizeString(1, x.GetSub())
+	return n
+}
+
+func (x *OkReq) sizeField2() (n int) {
+	if x.Obj == "" {
+		return n
+	}
+	n += fastpb.SizeString(2, x.GetObj())
+	return n
+}
+
+func (x *OkReq) sizeField3() (n int) {
+	if x.Act == "" {
+		return n
+	}
+	n += fastpb.SizeString(3, x.GetAct())
 	return n
 }
 
@@ -189,5 +245,7 @@ var fieldIDToName_UpgradeReq = map[int32]string{
 var fieldIDToName_Empty = map[int32]string{}
 
 var fieldIDToName_OkReq = map[int32]string{
-	1: "Email",
+	1: "Sub",
+	2: "Obj",
+	3: "Act",
 }

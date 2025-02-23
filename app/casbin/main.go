@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/MyGoFor/E-commerce/app/casbin/biz/rbac"
 	"net"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 )
 
 func main() {
+	rbac.InitCasbin()
+
 	opts := kitexInit()
 
 	svr := casbinservice.NewServer(new(CasbinServiceImpl), opts...)
