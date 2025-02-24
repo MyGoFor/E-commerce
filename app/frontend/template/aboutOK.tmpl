@@ -1,0 +1,23 @@
+{{ define "aboutOK" }}
+{{ template "header" . }}
+<div class="row">
+    <div class="card border-0" style="width: 100%;">
+        <div class="card-body row">
+            <div class="col-lg-5 col-sm-12 flex-column align-self-end">
+                <img src="https://tuchuang.hch1212.online/img/aila5.png" class="col-lg-4 col-sm-12" alt="...">
+                <p>This is a community driven project</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-4">
+        <form method="POST" action="/product/add">
+            <p style="margin: 12px">成功进入商家界面，现在您可以添加商品</p>
+
+        </form>
+    </div>
+</div>
+{{ template "footer" . }}
+{{ end }}

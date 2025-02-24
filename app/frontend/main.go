@@ -7,7 +7,6 @@ import (
 	"github.com/MyGoFor/E-commerce/app/frontend/infra/rpc"
 	frontendutils "github.com/MyGoFor/E-commerce/app/frontend/utils"
 	"github.com/MyGoFor/E-commerce/common/mtl"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/casbin"
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
@@ -79,13 +78,16 @@ func main() {
 		c.HTML(consts.StatusOK, "sign-up", utils.H{"Title": "Sign Up"})
 	})
 	h.GET("/about", func(ctx context.Context, c *app.RequestContext) {
-		_, err := rpc.CasbinClient.Ok(ctx, &casbin.OkReq{Sub: "12@qq.com", Obj: "/about", Act: "GET"})
-		if err != nil {
-			c.JSON(consts.StatusOK, utils.H{"message": err.Error()})
-			return
-		}
+		//_, err := rpc.CasbinClient.Ok(ctx, &casbin.OkReq{Sub: "12@qq.com", Obj: "/about", Act: "GET"})
+		//if err != nil {
+		//	c.JSON(consts.StatusOK, utils.H{"message": err.Error()})
+		//	return
+		//}
 		hlog.CtxInfof(ctx, "E-commerce shop about page")
 		c.HTML(consts.StatusOK, "about", utils.H{"Title": "About"})
+	})
+	h.GET("/aboutOK", func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(consts.StatusOK, "aboutOK", utils.H{"Title": "AboutOK"})
 	})
 
 	h.Spin()

@@ -10,5 +10,29 @@
             </div>
         </div>
     </div>
+
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <form method="POST" action="/casbin">
+                <p style="margin: 12px">如果已经是商家请输入email认证，如果想注册为商家请输入email和certificate证书</p>
+                <!-- Email 输入 -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+
+                <!-- Certificate 输入 -->
+                <div class="mb-3">
+                    <label for="certificate" class="form-label">Certificate</label>
+                    <input type="text" class="form-control" id="certificate" name="certificate">
+                </div>
+
+                <!-- 提交按钮 -->
+                <div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
     {{ template "footer" . }}
 {{ end }}

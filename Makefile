@@ -42,6 +42,12 @@ cwgo_hertz_order_page:
 	cwgo server --type HTTP --idl ../../idl/frontend/order_page.proto --service frontend -module ${MOD}/app/frontend -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_hertz_casbin_page
+cwgo_hertz_casbin_page:
+	@cd app/frontend && \
+	cwgo server --type HTTP --idl ../../idl/frontend/casbin_page.proto --service frontend -module ${MOD}/app/frontend -I ../../idl && \
+	cd ../..
+
 .PHONY: docker
 docker:
 	@docker compose up -d
