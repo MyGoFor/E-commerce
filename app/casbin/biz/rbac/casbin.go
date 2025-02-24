@@ -11,7 +11,7 @@ var (
 )
 
 func InitCasbin() {
-	E, err = casbin.NewEnforcer("model.pml", "policy.csv")
+	E, err = casbin.NewEnforcer("biz/rbac/model.pml", "biz/rbac/policy.csv")
 	if err != nil {
 		log.Fatalf("NewEnforecer failed:%v\n", err)
 	}

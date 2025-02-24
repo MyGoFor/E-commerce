@@ -6,6 +6,7 @@ import (
 	frontendutils "github.com/MyGoFor/E-commerce/app/frontend/utils"
 	"github.com/MyGoFor/E-commerce/common/clientsuite"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/casbin/casbinservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
@@ -20,6 +21,7 @@ import (
 )
 
 var (
+	CasbinClient   casbinservice.Client
 	ProductClient  productcatalogservice.Client
 	UserClient     userservice.Client
 	CartClient     cartservice.Client
@@ -38,6 +40,7 @@ func Init() {
 		initCartClient()
 		initOrderClient()
 		initCheckoutClient()
+		initCasbinClient()
 	})
 }
 
@@ -111,6 +114,16 @@ func initOrderClient() {
 
 func initCheckoutClient() {
 	CheckoutClient, err = checkoutservice.NewClient("checkout", client.WithSuite(clientsuite.CommonClientSuite{
+		CurrentServiceName: ServiceName,
+		RegistryAddress:    RegistryAddr,
+	}))
+	if err != nil {
+		hlog.Fatal(err)
+	}
+}
+
+func initCasbinClient() {
+	CasbinClient, err = casbinservice.NewClient("casbin", client.WithSuite(clientsuite.CommonClientSuite{
 		CurrentServiceName: ServiceName,
 		RegistryAddress:    RegistryAddr,
 	}))
