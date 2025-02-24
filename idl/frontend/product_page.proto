@@ -23,4 +23,15 @@ service ProductService {
   rpc SearchProducts(SearchProductsReq) returns (Empty) {
     option (api.get) = "/search";
   }
+  rpc AddProduct(AddReq) returns (Empty) {
+    option (api.post) = "/product/add";
+  }
+}
+
+message AddReq {
+  string name = 1;
+  string description = 2;
+  string picture = 3;
+  float price = 4;
+  repeated string categories = 5;
 }

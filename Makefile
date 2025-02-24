@@ -180,6 +180,10 @@ checkout_run:
 email_run:
 	@cd app/email && go run . && cd ../.. \
 
+.PHONY: casbin_run
+casbin_run:
+	@cd app/casbin && go run . && cd ../.. \
+
 .PHONY: frontend_run
 frontend_run:
 	@cd app/frontend && go run . && cd ../.. \

@@ -20,3 +20,13 @@ func _searchproductsMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _productMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _addproductMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
