@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package frontend.casbin;
+
+import "api.proto";
+
+option go_package = "/frontend/casbin";
+
+// 有certificate就升级，没有就验证
+message UpgradeOrOkReq {
+  string email = 1 [(api.form) = "email"];
+  string certificate = 2 [(api.form) = "certificate"];
+}
+
+message Empty{}
+
+service AuthService {
+  rpc UpgradeOrOk(UpgradeOrOkReq) returns (Empty) {
+    option (api.post) = "/casbin";
+  }
+}

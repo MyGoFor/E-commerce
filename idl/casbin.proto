@@ -12,12 +12,13 @@ service CasbinService {
 message UpgradeReq {
   string email = 1;
   string certificate = 2; // 证书，假设一个string
-  string content = 3; // 商品内容
 }
 
 message Empty {
 }
 
 message OkReq {
-  string email = 1;
+  string sub = 1;
+  string obj = 2;
+  string act = 3;
 }

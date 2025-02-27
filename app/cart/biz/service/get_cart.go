@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/cart/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/cart/biz/model"
 	cart "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	"github.com/cloudwego/kitex/pkg/kerrors"
@@ -18,7 +19,7 @@ func NewGetCartService(ctx context.Context) *GetCartService {
 // Run create note info
 func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err error) {
 	// Finish your business logic.
-	carts, err := model.GetCartByUserId(mysql.DB, s.ctx, req.GetUserId())
+	carts, err := model.NewCachedCartQuery(model.NewCartQuery(s.ctx, mysql.DB), redis.RedisClient).GetCartByUserId(req.UserId)
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(50000, err.Error())
 	}

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/user/biz/dal/mysql"
+	"github.com/MyGoFor/E-commerce/app/user/biz/dal/redis"
 	"github.com/MyGoFor/E-commerce/app/user/biz/model"
 	user "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/user"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -20,7 +21,7 @@ func NewLoginService(ctx context.Context) *LoginService {
 func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error) {
 	// Finish your business logic.
 	klog.Infof("LoginReq:%+v", req)
-	userRow, err := model.GetByEmail(mysql.DB, s.ctx, req.Email)
+	userRow, err := model.NewCacheUserQuery(model.NewUserQuery(s.ctx, mysql.DB), redis.RedisClient).GetByEmail(req.Email)
 	if err != nil {
 		return
 	}

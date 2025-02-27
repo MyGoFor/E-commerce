@@ -60,7 +60,7 @@ type CachedProductQuery struct {
 }
 
 func (c CachedProductQuery) GetByID(productId uint32) (product Product, err error) {
-	cacheKey := fmt.Sprintf("%S_%s_%d", c.prefix, "product_by_id", productId)
+	cacheKey := fmt.Sprintf("%s_%s_%d", c.prefix, "product_by_id", productId)
 	cacheResult := c.cacheClient.Get(c.productQuery.ctx, cacheKey)
 
 	// 闭包构建一个错误链
