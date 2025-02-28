@@ -18,7 +18,7 @@ on:
 #  PRIVATE_KEY: ${{ secrets.SSH_KEY }} # 部署的服务器私钥
 
 jobs:
-  run:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,43 +27,30 @@ jobs:
         with:
           fetch-depth: 0  # 获取完整的历史记录
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub (optional)
+        if: github.event_name == 'push'  # 仅在 push 时登录 Docker Hub
+        uses: docker/login-action@v3
         with:
-          go-version: 1.23
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Start docker
-        run: make docker
-
-      - name: Start User Service
+      - name: Build Docker images
         run: |
-          nohup make user_run &
+          docker-compose -f docker-compose.yml build
 
-      - name: Start Product Service
+      - name: Start Docker containers
         run: |
-          nohup make product_run &
+          docker-compose -f docker-compose.yml up -d
 
-      - name: Start Cart Service
+      - name: Run tests (optional)
         run: |
-          nohup make cart_run &
+          docker-compose exec frontend go test ./...
+          docker-compose exec product go test ./...
 
-      - name: Start Order Service
+      - name: Push Docker images (optional)
+        if: github.event_name == 'push'  # 仅在 push 时推送镜像
         run: |
-          nohup make order_run &
-
-      - name: Start Payment Service
-        run: |
-          nohup make payment_run &
-
-      - name: Start Checkout Service
-        run: |
-          nohup make checkout_run &
-
-      - name: Start Email Service
-        run: |
-          nohup make email_run &
-
-      - name: Start Frontend Service
-        run: |
-          nohup make frontend_run &
-
+          docker-compose -f docker-compose.yml push

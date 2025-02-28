@@ -32,6 +32,7 @@
 `make payment_run` </br>
 `make checkout_run` </br>
 `make email_run` </br>
+`make casbin_run` </br>
 `make frontend_run` </br>
 `make web` </br>
 

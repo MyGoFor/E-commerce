@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	"github.com/MyGoFor/E-commerce/app/casbin/biz/rbac"
+	"github.com/MyGoFor/E-commerce/app/casbin/conf/rbac"
 	casbin "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/casbin"
 )
 
