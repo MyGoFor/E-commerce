@@ -11,46 +11,93 @@ on:
       - main
       - test
 
-#env:
-#  HOST: 139.159.145.82  # 部署的服务器地址
-#  USER: root # 部署的服务器用户名
-#  GOPROXY: https://goproxy.cn,direct
-#  PRIVATE_KEY: ${{ secrets.SSH_KEY }} # 部署的服务器私钥
+env:
+  HOST: 154.37.220.49  # 部署的服务器地址
+  USER: root # 部署的服务器用户名
+  GOPROXY: https://goproxy.cn,direct
+  PRIVATE_KEY: ${{ secrets.SSH_KEY }} # 部署的服务器私钥
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKERHUB_USER }} # Docker Hub 用户名
+  DOCKER_HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }} # Docker Hub 访问令牌
 
 jobs:
-  build-and-test:
+  # 第一个 Job: 编译代码
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
         with:
-          fetch-depth: 0  # 获取完整的历史记录
+          go-version: '1.23'
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+          go mod vendor
+
+      - name: Build Go application
+        run: cd app/frontend && go build -o frontend .
+
+  # 第二个 Job: 构建 Docker 镜像
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build  # 依赖第一个 Job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v2
 
-      - name: Log in to Docker Hub (optional)
-        if: github.event_name == 'push'  # 仅在 push 时登录 Docker Hub
-        uses: docker/login-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker images
+      - name: Build Docker image
         run: |
-          docker-compose -f docker-compose.yml build
+          docker build -t ${{ secrets.DOCKERHUB_USER }}/frontend:latest .
 
-      - name: Start Docker containers
-        run: |
-          docker-compose -f docker-compose.yml up -d
+  # 第三个 Job: 推送 Docker 镜像到 Docker Hub
+  docker-push:
+    runs-on: ubuntu-latest
+    needs: docker-build  # 依赖第二个 Job
 
-      - name: Run tests (optional)
-        run: |
-          docker-compose exec frontend go test ./...
-          docker-compose exec product go test ./...
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Push Docker images (optional)
-        if: github.event_name == 'push'  # 仅在 push 时推送镜像
+      - name: Push Docker image to Docker Hub
         run: |
-          docker-compose -f docker-compose.yml push
+          docker push ${{ secrets.DOCKERHUB_USER }}/frontend:latest
+
+  # 第四个 Job: 通过 SSH 在远程服务器上拉取镜像并部署
+  deploy:
+    runs-on: ubuntu-latest
+    needs: docker-push  # 依赖第三个 Job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: SSH to deploy server and pull new image
+        run: |
+          ssh -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
+            docker pull ${DOCKER_HUB_USERNAME}/frontend:latest
+            docker stop frontend || true
+            docker rm frontend || true
+            docker run -d --name frontend -p 80:80 ${DOCKER_HUB_USERNAME}/frontend:latest
+          EOF
