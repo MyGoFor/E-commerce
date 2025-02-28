@@ -11,59 +11,12 @@ on:
       - main
       - test
 
-#env:
-#  HOST: 139.159.145.82  # 部署的服务器地址
-#  USER: root # 部署的服务器用户名
-#  GOPROXY: https://goproxy.cn,direct
-#  PRIVATE_KEY: ${{ secrets.SSH_KEY }} # 部署的服务器私钥
+env:
+  HOST: 154.37.220.49  # 部署的服务器地址
+  USER: root # 部署的服务器用户名
+  GOPROXY: https://goproxy.cn,direct
+  PRIVATE_KEY: ${{ secrets.SSH_KEY }} # 部署的服务器私钥
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKERHUB_USER }} # Docker Hub 用户名
+  DOCKER_HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }} # Docker Hub 访问令牌
 
 jobs:
-  run:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # 获取完整的历史记录
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.23
-
-      - name: Start docker
-        run: make docker
-
-      - name: Start User Service
-        run: |
-          nohup make user_run &
-
-      - name: Start Product Service
-        run: |
-          nohup make product_run &
-
-      - name: Start Cart Service
-        run: |
-          nohup make cart_run &
-
-      - name: Start Order Service
-        run: |
-          nohup make order_run &
-
-      - name: Start Payment Service
-        run: |
-          nohup make payment_run &
-
-      - name: Start Checkout Service
-        run: |
-          nohup make checkout_run &
-
-      - name: Start Email Service
-        run: |
-          nohup make email_run &
-
-      - name: Start Frontend Service
-        run: |
-          nohup make frontend_run &
-

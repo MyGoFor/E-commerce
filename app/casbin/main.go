@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MyGoFor/E-commerce/app/casbin/biz/rbac"
+	"github.com/MyGoFor/E-commerce/app/casbin/conf/rbac"
 	"github.com/MyGoFor/E-commerce/common/serversuite"
 	"net"
 	"time"

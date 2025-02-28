@@ -2,8 +2,8 @@ package rpc
 
 import (
 	"fmt"
+	"github.com/MyGoFor/E-commerce/app/cart/conf"
 	"github.com/MyGoFor/E-commerce/app/cart/utils"
-	"github.com/MyGoFor/E-commerce/app/product/conf"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
