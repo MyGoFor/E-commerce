@@ -36,9 +36,9 @@
 `make frontend_run` </br>
 `make web` </br>
 
-2. docker容器化部署
+2. docker容器化部署<br>
 `git clone https://github.com/MyGoFor/E-commerce.git`<br>
 `make docker`<br>
 
 
-3. kind部署k8s集群后启动
+3. kind部署k8s集群后启动<br>
