@@ -22,6 +22,7 @@
 | 熔断和fallback                                                                         | for product                 |
 
 ## 启动命令
+`修改common/mtl/tracing.go`
 
 1. 本地启动</br>
 `make docker` </br>
