@@ -99,6 +99,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      frontend:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -118,6 +120,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      product:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -137,6 +141,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      user:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -156,6 +162,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      cart:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -175,6 +183,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      order:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -194,6 +204,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      payment:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -213,6 +225,8 @@ services:
       - MYSQL_HOST=154.37.220.49
       - GO_ENV=dev
     depends_on:
+      checkout:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
@@ -229,6 +243,8 @@ services:
       - OTEL_EXPORTER_OTLP_INSECURE=true
       - GO_ENV=dev
     depends_on:
+      email:
+        condition: service_started
       consul:
         condition: service_started
     volumes:
