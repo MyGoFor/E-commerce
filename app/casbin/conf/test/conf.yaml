@@ -1,3 +1,0 @@
-mysql:
-  dsn: "%s:%s@tcp(%s:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
-
