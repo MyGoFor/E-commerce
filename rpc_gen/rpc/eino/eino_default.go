@@ -16,7 +16,7 @@ func SearchOrder(ctx context.Context, req *eino.SearchOrderReq, callOptions ...c
 	return resp, nil
 }
 
-func PlaceOrder(ctx context.Context, req *eino.PlaceOrderReq, callOptions ...callopt.Option) (resp *eino.Empty, err error) {
+func PlaceOrder(ctx context.Context, req *eino.PlaceOrderReq, callOptions ...callopt.Option) (resp *eino.PlaceOrderResp, err error) {
 	resp, err = defaultClient.PlaceOrder(ctx, req, callOptions...)
 	if err != nil {
 		klog.CtxErrorf(ctx, "PlaceOrder call failed,err =%+v", err)

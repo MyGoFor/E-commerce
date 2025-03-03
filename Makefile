@@ -202,6 +202,10 @@ email_run:
 casbin_run:
 	@cd app/casbin && go run . && cd ../.. \
 
+.PHONY: eino_run
+eino_run:
+	@cd app/eino && go run . && cd ../.. \
+
 .PHONY: frontend_run
 frontend_run:
 	@cd app/frontend && go run . && cd ../.. \

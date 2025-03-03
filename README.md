@@ -22,7 +22,7 @@
 | 熔断和fallback                                                                         | for product                 |
 
 ## 启动命令
-`修改common/mtl/tracing.go`
+不同情况先修改`common/mtl/tracing.go`
 
 1. 本地启动</br>
 `make docker` </br>
@@ -34,6 +34,7 @@
 `make checkout_run` </br>
 `make email_run` </br>
 `make casbin_run` </br>
+`make eino_run` </br>
 `make frontend_run` </br>
 `make web` </br>
 

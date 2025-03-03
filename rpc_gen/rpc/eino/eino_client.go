@@ -13,7 +13,7 @@ type RPCClient interface {
 	KitexClient() einoservice.Client
 	Service() string
 	SearchOrder(ctx context.Context, Req *eino.SearchOrderReq, callOptions ...callopt.Option) (r *eino.SearchOrderResp, err error)
-	PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.Empty, err error)
+	PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.PlaceOrderResp, err error)
 }
 
 func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
@@ -46,6 +46,6 @@ func (c *clientImpl) SearchOrder(ctx context.Context, Req *eino.SearchOrderReq, 
 	return c.kitexClient.SearchOrder(ctx, Req, callOptions...)
 }
 
-func (c *clientImpl) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.Empty, err error) {
+func (c *clientImpl) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.PlaceOrderResp, err error) {
 	return c.kitexClient.PlaceOrder(ctx, Req, callOptions...)
 }

@@ -2,6 +2,7 @@ package AiModel
 
 import (
 	"context"
+	"crypto/tls"
 	"github.com/MyGoFor/E-commerce/app/eino/infra/rpc"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
 	_ "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
@@ -10,8 +11,14 @@ import (
 	"github.com/cloudwego/eino/components/prompt"
 	"github.com/cloudwego/eino/schema"
 	"log"
+	"net/http"
 	"strings"
 )
+
+func init() {
+	// 跳过证书验证（全局生效）
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+}
 
 func PlaceModel(ctx context.Context, question string, uid int32) (string, error) {
 
@@ -56,7 +63,6 @@ func PlaceModel(ctx context.Context, question string, uid int32) (string, error)
 	if err != nil {
 		panic(err)
 	}
-	log.Println(response.Content)
 
 	slice := strings.Split(response.Content, " ")
 	if slice == nil {
@@ -67,6 +73,9 @@ func PlaceModel(ctx context.Context, question string, uid int32) (string, error)
 		ProductResp, err := rpc.ProductClient.SearchProducts(ctx, &product.SearchProductsReq{Query: s})
 		if err != nil {
 			return "", err
+		}
+		if ProductResp.Results == nil {
+			continue
 		}
 		item := ProductResp.Results[0]
 		_, err = rpc.CartClient.AddItem(ctx, &cart.AddItemReq{

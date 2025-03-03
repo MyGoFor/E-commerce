@@ -1,6 +1,6 @@
 kitex:
-  service: "order"
-  address: ":8891"
+  service: "eino"
+  address: ":8896"
   metrics_port: ":9991"
   log_level: info
   log_file_name: "log/kitex.log"
@@ -15,7 +15,7 @@ registry:
   password: ""
 
 mysql:
-  dsn: "%s:%s@tcp(%s:3306)/order?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "%s:%s@tcp(%s:3306)/eino?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
   address: "154.37.220.49:6379"

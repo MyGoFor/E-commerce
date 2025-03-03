@@ -25,11 +25,14 @@ func ToCart(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	_, err = service.NewToCartService(ctx, c).Run(&req)
+	resp, err := service.NewToCartService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
 
-	c.HTML(consts.StatusOK, "aiOK", map[string]interface{}{"Title": "AIOK"})
+	c.HTML(consts.StatusOK, "aiOK", map[string]interface{}{
+		"Title":   "AIOK",
+		"Content": resp,
+	})
 }
