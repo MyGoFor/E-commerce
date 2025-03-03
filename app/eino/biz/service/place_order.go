@@ -14,13 +14,13 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 }
 
 // Run create note info
-func (s *PlaceOrderService) Run(req *eino.PlaceOrderReq) (resp *eino.PlaceOrderResp, err error) {
+func (s *PlaceOrderService) Run(req *eino.PlaceOrderReq) (resp *eino.Empty, err error) {
 	s.ctx = context.WithValue(s.ctx, "SERVICE_NAME", "ai")
 	// Finish your business logic.
-	result, err := AiModel.PlaceModel(s.ctx, req.Question)
+	err = AiModel.PlaceModel(s.ctx, req.Question, req.Uid)
 	if err != nil {
 		return nil, err
 	}
-	resp = &eino.PlaceOrderResp{PlaceOrderResp: result}
+	resp = &eino.Empty{}
 	return resp, nil
 }

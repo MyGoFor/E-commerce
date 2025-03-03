@@ -17,6 +17,7 @@ package rpc
 import (
 	"github.com/MyGoFor/E-commerce/app/eino/conf"
 	"github.com/MyGoFor/E-commerce/common/clientsuite"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -27,6 +28,7 @@ import (
 
 var (
 	ProductClient productcatalogservice.Client
+	CartClient    cartservice.Client
 	OrderClient   orderservice.Client
 	once          sync.Once
 	err           error
@@ -37,6 +39,7 @@ var (
 func InitClient() {
 	once.Do(func() {
 		initProductClient()
+		initCartClient()
 		initOrderClient()
 	})
 }
@@ -49,6 +52,19 @@ func initProductClient() {
 		}),
 	}
 	ProductClient, err = productcatalogservice.NewClient("product", opts...)
+	if err != nil {
+		hlog.Fatal(err)
+	}
+}
+
+func initCartClient() {
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: ServiceName,
+			RegistryAddress:    RegistryAddr,
+		}),
+	}
+	CartClient, err = cartservice.NewClient("cart", opts...)
 	if err != nil {
 		hlog.Fatal(err)
 	}

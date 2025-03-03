@@ -17,7 +17,7 @@ func (s *EinoServiceImpl) SearchOrder(ctx context.Context, req *eino.SearchOrder
 }
 
 // PlaceOrder implements the EinoServiceImpl interface.
-func (s *EinoServiceImpl) PlaceOrder(ctx context.Context, req *eino.PlaceOrderReq) (resp *eino.PlaceOrderResp, err error) {
+func (s *EinoServiceImpl) PlaceOrder(ctx context.Context, req *eino.PlaceOrderReq) (resp *eino.Empty, err error) {
 	resp, err = service.NewPlaceOrderService(ctx).Run(req)
 
 	return resp, err

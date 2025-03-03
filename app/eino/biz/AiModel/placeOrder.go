@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/eino/infra/rpc"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
+	_ "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/cloudwego/eino-ext/components/model/ark"
 	"github.com/cloudwego/eino/components/prompt"
@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func PlaceModel(ctx context.Context, question string) (*order.PlaceOrderResp, error) {
+func PlaceModel(ctx context.Context, question string, uid int32) error {
 
 	// 初始化模型
 	model, err := ark.NewChatModel(ctx, &ark.ChatModelConfig{
@@ -58,36 +58,56 @@ func PlaceModel(ctx context.Context, question string) (*order.PlaceOrderResp, er
 	}
 	log.Println(response.Content)
 
-	//rpc创建order
 	slice := strings.Split(response.Content, " ")
-	var orderItems []*order.OrderItem
 	for _, s := range slice {
 		log.Println(s)
-		resp, err := rpc.ProductClient.SearchProducts(ctx, &product.SearchProductsReq{Query: s})
+		ProductResp, err := rpc.ProductClient.SearchProducts(ctx, &product.SearchProductsReq{Query: s})
 		if err != nil {
-			return nil, err
+			return err
 		}
-		item := resp.Results[0]
-		o := &order.OrderItem{
+		item := ProductResp.Results[0]
+		_, err = rpc.CartClient.AddItem(ctx, &cart.AddItemReq{
+			UserId: uint32(uid),
 			Item: &cart.CartItem{
 				ProductId: item.Id,
 				Quantity:  1,
 			},
-			Cost: item.Price,
+		})
+		if err != nil {
+			return err
 		}
-		orderItems = append(orderItems, o)
 	}
-	resp, err := rpc.OrderClient.PlaceOrder(ctx, &order.PlaceOrderReq{
-		UserId:       0,
-		UserCurrency: "",
-		Address:      nil,
-		Email:        "",
-		OrderItems:   orderItems,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return nil
+	////rpc创建order
+	//slice := strings.Split(response.Content, " ")
+	//var orderItems []*order.OrderItem
+	//for _, s := range slice {
+	//	log.Println(s)
+	//	resp, err := rpc.ProductClient.SearchProducts(ctx, &product.SearchProductsReq{Query: s})
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	item := resp.Results[0]
+	//	o := &order.OrderItem{
+	//		Item: &cart.CartItem{
+	//			ProductId: item.Id,
+	//			Quantity:  1,
+	//		},
+	//		Cost: item.Price,
+	//	}
+	//	orderItems = append(orderItems, o)
+	//}
+	//resp, err := rpc.OrderClient.PlaceOrder(ctx, &order.PlaceOrderReq{
+	//	UserId:       0,
+	//	UserCurrency: "",
+	//	Address:      nil,
+	//	Email:        "",
+	//	OrderItems:   orderItems,
+	//})
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//return resp, nil
 
 }

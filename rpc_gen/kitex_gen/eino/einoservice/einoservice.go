@@ -340,14 +340,14 @@ func (p *PlaceOrderArgs) GetFirstArgument() interface{} {
 }
 
 type PlaceOrderResult struct {
-	Success *eino.PlaceOrderResp
+	Success *eino.Empty
 }
 
-var PlaceOrderResult_Success_DEFAULT *eino.PlaceOrderResp
+var PlaceOrderResult_Success_DEFAULT *eino.Empty
 
 func (p *PlaceOrderResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
-		p.Success = new(eino.PlaceOrderResp)
+		p.Success = new(eino.Empty)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
@@ -374,7 +374,7 @@ func (p *PlaceOrderResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *PlaceOrderResult) Unmarshal(in []byte) error {
-	msg := new(eino.PlaceOrderResp)
+	msg := new(eino.Empty)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -382,7 +382,7 @@ func (p *PlaceOrderResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *PlaceOrderResult) GetSuccess() *eino.PlaceOrderResp {
+func (p *PlaceOrderResult) GetSuccess() *eino.Empty {
 	if !p.IsSetSuccess() {
 		return PlaceOrderResult_Success_DEFAULT
 	}
@@ -390,7 +390,7 @@ func (p *PlaceOrderResult) GetSuccess() *eino.PlaceOrderResp {
 }
 
 func (p *PlaceOrderResult) SetSuccess(x interface{}) {
-	p.Success = x.(*eino.PlaceOrderResp)
+	p.Success = x.(*eino.Empty)
 }
 
 func (p *PlaceOrderResult) IsSetSuccess() bool {
@@ -421,7 +421,7 @@ func (p *kClient) SearchOrder(ctx context.Context, Req *eino.SearchOrderReq) (r 
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq) (r *eino.PlaceOrderResp, err error) {
+func (p *kClient) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq) (r *eino.Empty, err error) {
 	var _args PlaceOrderArgs
 	_args.Req = Req
 	var _result PlaceOrderResult

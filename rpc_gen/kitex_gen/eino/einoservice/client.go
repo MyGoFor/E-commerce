@@ -12,7 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	SearchOrder(ctx context.Context, Req *eino.SearchOrderReq, callOptions ...callopt.Option) (r *eino.SearchOrderResp, err error)
-	PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.PlaceOrderResp, err error)
+	PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.Empty, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -49,7 +49,7 @@ func (p *kEinoServiceClient) SearchOrder(ctx context.Context, Req *eino.SearchOr
 	return p.kClient.SearchOrder(ctx, Req)
 }
 
-func (p *kEinoServiceClient) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.PlaceOrderResp, err error) {
+func (p *kEinoServiceClient) PlaceOrder(ctx context.Context, Req *eino.PlaceOrderReq, callOptions ...callopt.Option) (r *eino.Empty, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.PlaceOrder(ctx, Req)
 }

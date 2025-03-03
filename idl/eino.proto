@@ -8,7 +8,7 @@ option go_package = '/eino';
 
 service EinoService {
   rpc SearchOrder(SearchOrderReq) returns (SearchOrderResp) {}
-  rpc PlaceOrder(PlaceOrderReq) returns (PlaceOrderResp) {}
+  rpc PlaceOrder(PlaceOrderReq) returns (Empty) {}
 }
 
 message SearchOrderReq {
@@ -20,10 +20,11 @@ message SearchOrderResp {
 }
 
 message PlaceOrderReq {
-  string question = 1;
+  int32 uid = 1;
+  string question = 2;
 }
 
-message PlaceOrderResp {
-  order.PlaceOrderResp PlaceOrderResp = 1;
+message Empty {
+
 }
 
