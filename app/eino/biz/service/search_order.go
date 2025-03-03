@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/MyGoFor/E-commerce/app/eino/biz/AiModel"
 	eino "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/eino"
 )
 
@@ -15,6 +16,10 @@ func NewSearchOrderService(ctx context.Context) *SearchOrderService {
 // Run create note info
 func (s *SearchOrderService) Run(req *eino.SearchOrderReq) (resp *eino.SearchOrderResp, err error) {
 	// Finish your business logic.
-
-	return
+	result, err := AiModel.SearchModel(req.Question)
+	if err != nil {
+		return nil, err
+	}
+	resp = &eino.SearchOrderResp{Order: result.Orders}
+	return resp, nil
 }

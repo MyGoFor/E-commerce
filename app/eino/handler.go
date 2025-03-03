@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"github.com/MyGoFor/E-commerce/app/eino/biz/service"
-	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/eino"
+	eino "github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/eino"
 )
 
 // EinoServiceImpl implements the last service interface defined in the IDL.

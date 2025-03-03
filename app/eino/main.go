@@ -1,6 +1,12 @@
 package main
 
 import (
+	"context"
+	"github.com/MyGoFor/E-commerce/app/eino/biz/dal"
+	"github.com/MyGoFor/E-commerce/app/eino/infra/rpc"
+	"github.com/MyGoFor/E-commerce/common/mtl"
+	"github.com/MyGoFor/E-commerce/common/serversuite"
+	"github.com/joho/godotenv"
 	"net"
 	"time"
 
@@ -14,11 +20,21 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var (
+	ServiceName  = conf.GetConf().Kitex.Service
+	RegistryAddr = conf.GetConf().Registry.RegistryAddress[0]
+)
+
 func main() {
+	_ = godotenv.Load()
+	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
+	p := mtl.InitTracing(ServiceName)
+	defer p.Shutdown(context.Background())
+	dal.Init()
+	rpc.InitClient()
 	opts := kitexInit()
 
 	svr := einoservice.NewServer(new(EinoServiceImpl), opts...)
-
 	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
@@ -31,7 +47,10 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr))
+	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(serversuite.CommonServerSuite{
+		CurrentServiceName: ServiceName,
+		RegistryAddress:    RegistryAddr,
+	}))
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
