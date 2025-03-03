@@ -48,6 +48,12 @@ cwgo_hertz_casbin_page:
 	cwgo server --type HTTP --idl ../../idl/frontend/casbin_page.proto --service frontend -module ${MOD}/app/frontend -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_hertz_ai_page
+cwgo_hertz_ai_page:
+	@cd app/frontend && \
+	cwgo server --type HTTP --idl ../../idl/frontend/ai_page.proto --service frontend -module ${MOD}/app/frontend -I ../../idl && \
+	cd ../..
+
 .PHONY: docker
 docker:
 	@docker compose up -d
@@ -148,6 +154,18 @@ cwgo_kitex_server_casbin:
 	cwgo server --type RPC --idl ../../idl/casbin.proto --service casbin --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/casbin -I ../../idl && \
 	cd ../..
 
+.PHONY: cwgo_kitex_client_eino
+cwgo_kitex_client_eino:
+	@cd rpc_gen && \
+	cwgo client --type RPC --idl ../idl/eino.proto --service eino -module ${MOD}/rpc_gen -I ../idl && \
+	cd ..
+
+.PHONY: cwgo_kitex_server_eino
+cwgo_kitex_server_eino:
+	@cd app/eino && \
+	cwgo server --type RPC --idl ../../idl/eino.proto --service eino --pass "-use ${MOD}/rpc_gen" -module ${MOD}/app/eino -I ../../idl && \
+	cd ../..
+
 .PHONY: consul
 consul:
 	@open "http://localhost:8500/ui/"
@@ -183,6 +201,10 @@ email_run:
 .PHONY: casbin_run
 casbin_run:
 	@cd app/casbin && go run . && cd ../.. \
+
+.PHONY: eino_run
+eino_run:
+	@cd app/eino && go run . && cd ../.. \
 
 .PHONY: frontend_run
 frontend_run:

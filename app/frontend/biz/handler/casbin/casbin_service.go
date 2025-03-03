@@ -2,7 +2,6 @@ package casbin
 
 import (
 	"context"
-
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/service"
 	"github.com/MyGoFor/E-commerce/app/frontend/biz/utils"
 	casbin "github.com/MyGoFor/E-commerce/app/frontend/hertz_gen/frontend/casbin"
@@ -27,5 +26,5 @@ func UpgradeOrOk(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	c.Redirect(consts.StatusOK, []byte("/aboutOK"))
+	c.HTML(consts.StatusOK, "aboutOK", map[string]interface{}{"Title": "AboutOK"})
 }

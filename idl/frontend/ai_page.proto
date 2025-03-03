@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package frontend.ai;
+
+import "api.proto";
+
+option go_package = "/frontend/ai";
+
+message AIReq {
+  string content = 1 [(api.form) = "content"];
+}
+
+message Empty{}
+
+service AIService {
+  rpc ToCart(AIReq) returns (Empty) {
+    option (api.post) = "/eino";
+  }
+}

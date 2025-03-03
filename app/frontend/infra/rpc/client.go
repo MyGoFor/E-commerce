@@ -8,6 +8,7 @@ import (
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/casbin/casbinservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/checkout/checkoutservice"
+	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/eino/einoservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/order/orderservice"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product"
 	"github.com/MyGoFor/E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
@@ -21,6 +22,7 @@ import (
 )
 
 var (
+	AIClient       einoservice.Client
 	CasbinClient   casbinservice.Client
 	ProductClient  productcatalogservice.Client
 	UserClient     userservice.Client
@@ -41,6 +43,7 @@ func Init() {
 		initOrderClient()
 		initCheckoutClient()
 		initCasbinClient()
+		initEinoClient()
 	})
 }
 
@@ -124,6 +127,16 @@ func initCheckoutClient() {
 
 func initCasbinClient() {
 	CasbinClient, err = casbinservice.NewClient("casbin", client.WithSuite(clientsuite.CommonClientSuite{
+		CurrentServiceName: ServiceName,
+		RegistryAddress:    RegistryAddr,
+	}))
+	if err != nil {
+		hlog.Fatal(err)
+	}
+}
+
+func initEinoClient() {
+	AIClient, err = einoservice.NewClient("eino", client.WithSuite(clientsuite.CommonClientSuite{
 		CurrentServiceName: ServiceName,
 		RegistryAddress:    RegistryAddr,
 	}))
