@@ -86,8 +86,8 @@ func main() {
 		hlog.CtxInfof(ctx, "E-commerce shop about page")
 		c.HTML(consts.StatusOK, "about", utils.H{"Title": "About"})
 	})
-	h.GET("/aboutOK", func(ctx context.Context, c *app.RequestContext) {
-		c.HTML(consts.StatusOK, "aboutOK", utils.H{"Title": "AboutOK"})
+	h.GET("/ai", func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(consts.StatusOK, "ai", utils.H{"Title": "AI"})
 	})
 
 	h.Spin()

@@ -14,7 +14,7 @@ message UpgradeOrOkReq {
 
 message Empty{}
 
-service AuthService {
+service CasbinService {
   rpc UpgradeOrOk(UpgradeOrOkReq) returns (Empty) {
     option (api.post) = "/casbin";
   }

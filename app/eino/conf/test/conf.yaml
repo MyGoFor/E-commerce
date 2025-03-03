@@ -1,6 +1,6 @@
 kitex:
   service: "eino"
-  address: ":8888"
+  address: ":8896"
   metrics_port: ":9991"
   log_level: info
   log_file_name: "log/kitex.log"

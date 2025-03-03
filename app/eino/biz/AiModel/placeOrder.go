@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func PlaceModel(ctx context.Context, question string, uid int32) error {
+func PlaceModel(ctx context.Context, question string, uid int32) (string, error) {
 
 	// 初始化模型
 	model, err := ark.NewChatModel(ctx, &ark.ChatModelConfig{
@@ -59,11 +59,14 @@ func PlaceModel(ctx context.Context, question string, uid int32) error {
 	log.Println(response.Content)
 
 	slice := strings.Split(response.Content, " ")
+	if slice == nil {
+		return response.Content, nil
+	}
 	for _, s := range slice {
 		log.Println(s)
 		ProductResp, err := rpc.ProductClient.SearchProducts(ctx, &product.SearchProductsReq{Query: s})
 		if err != nil {
-			return err
+			return "", err
 		}
 		item := ProductResp.Results[0]
 		_, err = rpc.CartClient.AddItem(ctx, &cart.AddItemReq{
@@ -74,10 +77,10 @@ func PlaceModel(ctx context.Context, question string, uid int32) error {
 			},
 		})
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
-	return nil
+	return response.Content, nil
 	////rpc创建order
 	//slice := strings.Split(response.Content, " ")
 	//var orderItems []*order.OrderItem
