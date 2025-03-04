@@ -10,6 +10,8 @@ import (
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
+	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -31,6 +33,7 @@ import (
 	"github.com/joho/godotenv"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	_ "net/http/pprof"
 )
 
 var (
@@ -40,6 +43,10 @@ var (
 )
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil)) // 开启 pprof 服务
+	}()
+
 	_ = godotenv.Load()
 	consul, registryInfo := mtl.InitMetric(ServiceName, MetricsPort, RegistryAddr)
 	defer consul.Deregister(registryInfo) // 反注册掉 prometheus 上的实例
