@@ -21,6 +21,9 @@
 | kind                                                                         | docker内部k8s集群部署             |
 | 熔断和fallback                                                                         | for product                 |
 
+## 项目文档
+<https://redrock.feishu.cn/docx/MkIOdIvpuorOCTxoYA4cvI0knge>
+
 ## 启动命令
 不同情况先修改`common/mtl/tracing.go`
 
