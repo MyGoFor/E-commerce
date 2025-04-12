@@ -24,7 +24,7 @@ func PlaceModel(ctx context.Context, question string, uid int32) (string, error)
 
 	// 初始化模型
 	model, err := ark.NewChatModel(ctx, &ark.ChatModelConfig{
-		APIKey: "697cee32-664b-4102-bec5-fc859b1d5158",
+		APIKey: "697cee32-664b-4102-bec5-fc859b1b5158",
 		Region: "cn-beijing",
 		Model:  "ep-20250129165433-s8xk8",
 	})
